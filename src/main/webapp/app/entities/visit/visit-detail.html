@@ -1,0 +1,31 @@
+
+<div>
+    <h2><span>Visit</span> {{vm.visit.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span>Date Of Visit</span></dt>
+        <dd>
+            <span>{{vm.visit.dateOfVisit | date:'medium'}}</span>
+        </dd>
+        <dt><span>Store</span></dt>
+        <dd>
+            <a ui-sref="store-detail({id:vm.visit.store.id})">{{vm.visit.store.name}}</a>
+        </dd>
+        <dt><span>Visitor</span></dt>
+        <dd>
+            <a ui-sref="visitor-detail({id:vm.visit.visitor.id})">{{vm.visit.visitor.id}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button" ui-sref="visit-detail.edit({id:vm.visit.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm"> Edit</span>
+    </button>
+</div>
