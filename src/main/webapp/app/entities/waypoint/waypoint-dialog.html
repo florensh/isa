@@ -1,0 +1,86 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myWaypointLabel">Create or edit a Waypoint</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.waypoint.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.waypoint.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_x">X</label>
+            <input type="number" class="form-control" name="x" id="field_x"
+                    ng-model="vm.waypoint.x"
+                    required />
+            <div ng-show="editForm.x.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.x.$error.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.x.$error.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_y">Y</label>
+            <input type="number" class="form-control" name="y" id="field_y"
+                    ng-model="vm.waypoint.y"
+                    required />
+            <div ng-show="editForm.y.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.y.$error.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.y.$error.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_timestamp">Timestamp</label>
+            <input type="number" class="form-control" name="timestamp" id="field_timestamp"
+                    ng-model="vm.waypoint.timestamp"
+                    required />
+            <div ng-show="editForm.timestamp.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.timestamp.$error.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.timestamp.$error.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="field_visit">Visit</label>
+            <select class="form-control" id="field_visit" name="visit" ng-model="vm.waypoint.visit" ng-options="visit as visit.id for visit in vm.visits track by visit.id" required>
+                <option value=""></option>
+            </select>
+        </div>
+        <div ng-show="editForm.visit.$invalid">
+            <p class="help-block"
+                ng-show="editForm.visit.$error.required">
+                This field is required.
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>

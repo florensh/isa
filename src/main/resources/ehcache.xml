@@ -28,5 +28,7 @@
 
     <cache alias="de.hshn.se.domain.Visit" uses-template="simple"/>
 
+    <cache alias="de.hshn.se.domain.Waypoint" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>
