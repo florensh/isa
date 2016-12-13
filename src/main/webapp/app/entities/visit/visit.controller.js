@@ -5,9 +5,53 @@
         .module('isaApp')
         .controller('VisitController', VisitController);
 
-    VisitController.$inject = ['$scope', '$state', 'Visit', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams'];
+    VisitController.$inject = ['$scope', '$state', 'Visit', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams', 'leafletData'];
 
-    function VisitController ($scope, $state, Visit, ParseLinks, AlertService, paginationConstants, pagingParams) {
+    function VisitController ($scope, $state, Visit, ParseLinks, AlertService, paginationConstants, pagingParams, leafletData) {
+
+      angular.extend($scope, {
+        center: {
+          autoDiscover: true
+        },
+        overlays: {
+          search: {
+            name: 'search',
+            type: 'group',
+            visible: true,
+            layerParams: {
+              showOnSelector: false
+            }
+          }
+        }
+      });
+
+      leafletData.getLayers().then(function(baselayers) {
+        console.log(baselayers.overlays.search);
+        angular.extend($scope.controls, {
+          search: {
+            layer: baselayers.overlays.search
+          }
+        });
+      });
+
+      leafletData.getMap().then(function(map) {
+        map.addControl(new L.Control.Search({
+          url: 'http://nominatim.openstreetmap.org/search?format=json&q={s}',
+          jsonpParam: 'json_callback',
+          propertyName: 'display_name',
+          propertyLoc: ['lat', 'lon'],
+          circleLocation: false,
+          markerLocation: false,
+          autoType: false,
+          autoCollapse: true,
+          minLength: 2,
+          zoom: 10
+        }));
+      });
+
+
+
+
         var vm = this;
 
         vm.loadPage = loadPage;
