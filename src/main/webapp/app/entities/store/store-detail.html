@@ -1,39 +1,62 @@
-
 <div>
-    <h2><span>Store</span> {{vm.store.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="dl-horizontal jh-entity-details">
-        <dt><span>Name</span></dt>
-        <dd>
-            <span>{{vm.store.name}}</span>
-        </dd>
-        <dt><span>Street</span></dt>
-        <dd>
-            <span>{{vm.store.street}}</span>
-        </dd>
-        <dt><span>City</span></dt>
-        <dd>
-            <span>{{vm.store.city}}</span>
-        </dd>
-        <dt><span>Zip</span></dt>
-        <dd>
-            <span>{{vm.store.zip}}</span>
-        </dd>
-        <dt><span>Country</span></dt>
-        <dd>
-            <span>{{vm.store.country}}</span>
-        </dd>
-    </dl>
 
-    <button type="submit"
-            ui-sref="{{ vm.previousState }}"
-            class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
-    </button>
+    <div class="headarea">
+      <div class="container">
+        <h4><a ui-sref="store"><span>Stores</span></a><small style="padding: 0px 10px;"><span class="glyphicon glyphicon-menu-right"></span></small><span style="color: #9E7CC1!important; padding-right:3px; font-size: 1.0em;" class="glyphicon glyphicon-record"></span>{{vm.store.name}}</h4>
+        <h4><small><span class="glyphicon glyphicon-map-marker"></span> <span>{{vm.store.street}}, </span><span>{{vm.store.city}}</span></small></h4>
+        <jhi-alert-error></jhi-alert-error>
+      </div>
 
-    <button type="button" ui-sref="store-detail.edit({id:vm.store.id})" class="btn btn-primary">
-        <span class="glyphicon glyphicon-pencil"></span>
-        <span class="hidden-xs hidden-sm"> Edit</span>
-    </button>
+    </div>
+
+    <div class="container subNav">
+        <ul>
+            <!-- <li><a href="#home">Overview</a></li> -->
+            <li><a ng-class="{active: vm.active==0}" ui-sref="store-detail.visit" ng-click="vm.active=0">Heatmap</a></li>
+            <li><a ng-class="{active: vm.active==1}" ui-sref="store-detail.visit" ng-click="vm.active=1">Visits</a></li>
+        </ul>
+    </div>
+    <hr style="margin:0px">
+    <div class="container store-tab-content" ui-view="submenu"></div>
+
+    <!-- <uib-tab index="0" heading="Overview">
+
+        <dl class="dl-horizontal jh-entity-details">
+            <dt><span>Name</span></dt>
+            <dd>
+                <span>{{vm.store.name}}</span>
+            </dd>
+            <dt><span>Street</span></dt>
+            <dd>
+                <span>{{vm.store.street}}</span>
+            </dd>
+            <dt><span>City</span></dt>
+            <dd>
+                <span>{{vm.store.city}}</span>
+            </dd>
+            <dt><span>Zip</span></dt>
+            <dd>
+                <span>{{vm.store.zip}}</span>
+            </dd>
+            <dt><span>Country</span></dt>
+            <dd>
+                <span>{{vm.store.country}}</span>
+            </dd>
+        </dl>
+
+        <button type="submit"
+                ui-sref="{{ vm.previousState }}"
+                class="btn btn-info">
+            <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+        </button>
+
+        <button type="button" ui-sref="store-detail.edit({id:vm.store.id})" class="btn btn-primary">
+            <span class="glyphicon glyphicon-pencil"></span>
+            <span class="hidden-xs hidden-sm"> Edit</span>
+        </button>
+
+      </uib-tab> -->
+
+
+
 </div>

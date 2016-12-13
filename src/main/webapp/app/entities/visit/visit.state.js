@@ -9,15 +9,15 @@
 
     function stateConfig($stateProvider) {
         $stateProvider
-        .state('visit', {
-            parent: 'entity',
+        .state('store-detail.visit', {
+            parent: 'store-detail',
             url: '/visit?page&sort&search',
             data: {
                 authorities: ['ROLE_USER'],
                 pageTitle: 'Visits'
             },
             views: {
-                'content@': {
+                'submenu': {
                     templateUrl: 'app/entities/visit/visits.html',
                     controller: 'VisitController',
                     controllerAs: 'vm'
@@ -46,7 +46,7 @@
                 }]
             }
         })
-        .state('visit-detail', {
+        .state('store-detail.visit-detail', {
             parent: 'entity',
             url: '/visit/{id}',
             data: {
@@ -99,8 +99,8 @@
                 });
             }]
         })
-        .state('visit.new', {
-            parent: 'visit',
+        .state('store-detail.visit.new', {
+            parent: 'store-detail.visit',
             url: '/new',
             data: {
                 authorities: ['ROLE_USER']

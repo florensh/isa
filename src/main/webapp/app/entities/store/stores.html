@@ -1,41 +1,69 @@
 <div>
-    <h2>Stores</h2>
-    <jhi-alert></jhi-alert>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xs-4 no-padding-left">
-                <button class="btn btn-primary" ui-sref="store.new" >
+    <div class="headarea">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <h4><a ui-sref="store"><span>Stores</span></a></h4>
+                </div>
+                <div class="col-xs-7 no-padding-left">
+                    <button style="margin-top:6px" class="btn btn-default btn-sm pull-right" ui-sref="store.new">
                     <span class="glyphicon glyphicon-plus"></span>
                     <span >
-                        Create new Store
+                        New
                     </span>
                 </button>
+                </div>
             </div>
         </div>
     </div>
-    <br/>
-    <div class="table-responsive">
-        <table class="jh-table table table-striped">
+
+    <div class="container">
+        <jhi-alert></jhi-alert>
+    </div>
+    <div class="list-grp">
+        <div class="list-elem" ng-repeat="store in vm.stores track by store.id" ui-sref="store-detail({id:store.id})">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5">
+                      <img class="icon" src="content/images/shop2.png" alt="shop"/>
+                        {{store.name}}
+                    </div>
+                    <div class="col-md-7">
+                        <small class="pull-right">{{store.zip}} {{store.city}}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+    <!-- <div class="table-responsive">
+        <table class="jh-table table table-hover">
             <thead>
-                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
-                    <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="name"><span>Name</span> <span class="glyphicon glyphicon-sort"></span></th>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()"> -->
+    <!-- <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th> -->
+    <!-- <th jh-sort-by="name"><span>Name</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="street"><span>Street</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="city"><span>City</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="zip"><span>Zip</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="country"><span>Country</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th></th>
-                </tr>
+                    <th jh-sort-by="country"><span>Country</span> <span class="glyphicon glyphicon-sort"></span></th> -->
+    <!-- <th></th> -->
+    <!-- </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="store in vm.stores track by store.id">
-                    <td><a ui-sref="store-detail({id:store.id})">{{store.id}}</a></td>
-                    <td>{{store.name}}</td>
+                <tr ng-repeat="store in vm.stores track by store.id" ui-sref="store-detail({id:store.id})"> -->
+    <!-- <td><a ui-sref="store-detail({id:store.id})">{{store.id}}</a></td> -->
+    <!-- <td>{{store.name}}</td>
                     <td>{{store.street}}</td>
                     <td>{{store.city}}</td>
                     <td>{{store.zip}}</td>
-                    <td>{{store.country}}</td>
-                    <td class="text-right">
+                    <td>{{store.country}}</td> -->
+    <!-- <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"
                                     ui-sref="store-detail({id:store.id})"
@@ -56,13 +84,16 @@
                                 <span class="hidden-xs hidden-sm"></span>
                             </button>
                         </div>
-                    </td>
-                </tr>
+                    </td> -->
+    <!-- </tr>
             </tbody>
         </table>
+    </div> -->
+    <div class="container">
+        <div class="text-center">
+            <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
+        </div>
+        <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
+
     </div>
-    <div class="text-center">
-        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
-    </div>
-    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
 </div>

@@ -1,10 +1,10 @@
 <div>
-    <h2>Visits</h2>
+    <p>Visits</p>
     <jhi-alert></jhi-alert>
-    <div class="container-fluid">
+    <!-- <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 no-padding-left">
-                <button class="btn btn-primary" ui-sref="visit.new" >
+                <button class="btn btn-primary" ui-sref="store-detail.visit.new" >
                     <span class="glyphicon glyphicon-plus"></span>
                     <span >
                         Create new Visit
@@ -13,8 +13,31 @@
             </div>
         </div>
     </div>
-    <br/>
-    <div class="table-responsive">
+    <br/> -->
+
+
+
+    <div class="list-grp">
+        <div class="list-elem" ng-repeat="visit in vm.visits track by visit.id" ui-sref="store-detail({id:store.id})">
+            <div class="row">
+                <div class="col-md-5">
+                    <strong>{{visit.dateOfVisit | date:'EEE'}}</strong>
+                    <span>{{visit.dateOfVisit | date:'mediumDate'}}</span> <code>{{visit.dateOfVisit | date:'shortTime'}}</code><br>
+                    <small>23 min</small> <a style="text-decoration: underline" href="#">watch path</a>
+                </div>
+                <div class="col-md-7">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+    <!-- <div class="table-responsive">
         <table class="jh-table table table-striped">
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
@@ -37,21 +60,15 @@
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
-                            <button type="submit"
-                                    ui-sref="visit-detail({id:visit.id})"
-                                    class="btn btn-info btn-sm">
+                            <button type="submit" ui-sref="visit-detail({id:visit.id})" class="btn btn-info btn-sm">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                                 <span class="hidden-xs hidden-sm"></span>
                             </button>
-                            <button type="submit"
-                                    ui-sref="visit.edit({id:visit.id})"
-                                    class="btn btn-primary btn-sm">
+                            <button type="submit" ui-sref="visit.edit({id:visit.id})" class="btn btn-primary btn-sm">
                                 <span class="glyphicon glyphicon-pencil"></span>
                                 <span class="hidden-xs hidden-sm"></span>
                             </button>
-                            <button type="submit"
-                                    ui-sref="visit.delete({id:visit.id})"
-                                    class="btn btn-danger btn-sm">
+                            <button type="submit" ui-sref="visit.delete({id:visit.id})" class="btn btn-danger btn-sm">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
                                 <span class="hidden-xs hidden-sm"></span>
                             </button>
@@ -60,7 +77,7 @@
                 </tr>
             </tbody>
         </table>
-    </div>
+    </div> -->
     <div class="text-center">
         <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
     </div>

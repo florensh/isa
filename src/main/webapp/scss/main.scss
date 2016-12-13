@@ -1,5 +1,5 @@
 body {
-    background: #fafafa;
+    background: #fff;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #333;
 }
@@ -325,10 +325,139 @@ entity detail page css
 }
 
 /* ==========================================================================
+entity detail page navigation
+========================================================================== */
+.subNav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.subNav li {
+    float: left;
+}
+
+.subNav li a {
+    display: inline-block;
+    padding: 15px 15px;
+    padding-left: 0px;
+    padding-right: 24px;
+    // padding-bottom: 15px;
+    // height: 47px;
+    text-decoration: none;
+    color: #96A3B6;
+    // font-size: 1.1em;
+}
+
+.subNav li a.active, .subNav li a:hover {
+    color: #79589F;
+}
+
+/* ==========================================================================
+header area
+========================================================================== */
+.headarea {
+    background-color: rgb(247, 248, 251);
+    border-bottom: 1px solid #e7ebf3;
+    padding: 17px 0px 12px 0px;
+}
+
+.headarea small {
+    color: #96A3B6;
+}
+
+.headarea h4 {
+    // font-weight: 100;
+}
+
+.headarea a {
+  text-decoration: none;
+}
+
+
+/* ==========================================================================
+Store
+========================================================================== */
+.store-tab-content {
+    margin-top: 30px;
+}
+
+.icon {
+    width: auto;
+    height: 35px;
+    margin-right: 5px;
+}
+
+
+/* ==========================================================================
+list
+========================================================================== */
+.list-grp{
+    margin-top:20px;
+}
+
+
+.list-elem{
+    position: relative;
+    display: block;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid #e7ebf3;
+    padding: 12px 0 10px 0;
+    border-left: none;
+    border-right: none;
+}
+
+.list-elem small {
+  color: #596981;
+}
+
+.list-elem:hover{
+  background-color: rgb(247, 248, 251);
+}
+
+.list-elem:first-of-type {
+    border-top: none;
+}
+
+.list-elem:last-of-type {
+    border-bottom: none;
+}
+
+
+/* ==========================================================================
 ui bootstrap tweaks
 ========================================================================== */
 .nav, .pagination, .carousel, .panel-title a {
     cursor: pointer;
+}
+
+// h1, h2, h3, h4, h5 {
+//   color: #79589F;
+// }
+
+.navbar{
+  margin-bottom: 0px;
+}
+
+.navbar-default {
+    background-color: #fff;
+    box-shadow: 0px 4px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    // color: #9E7CC1!important;
+}
+
+.navbar::after {
+    background: linear-gradient(to right, #9E7CC1, #8ECDEA);
+    content: '';
+    width: 100%;
+    position: absolute;
+    top: 50px;
+    height: 3px;
+    left: 0;
 }
 
 .datetime-picker-dropdown > li.date-picker-menu div > table .btn-default,
