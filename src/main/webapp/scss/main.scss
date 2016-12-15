@@ -340,9 +340,11 @@ entity detail page navigation
 
 .subNav li a {
     display: inline-block;
-    padding: 15px 15px;
-    padding-left: 0px;
-    padding-right: 24px;
+    padding: 16px 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    // padding-left: 12px;
+    // padding-right: 12px;
     // padding-bottom: 15px;
     // height: 47px;
     text-decoration: none;
@@ -352,6 +354,7 @@ entity detail page navigation
 
 .subNav li a.active, .subNav li a:hover {
     color: #79589F;
+    border-bottom: 1px solid #79589F;
 }
 
 /* ==========================================================================

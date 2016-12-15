@@ -10,11 +10,14 @@
     </div>
 
     <div class="container subNav">
+      <div class="row">
         <ul>
-            <!-- <li><a href="#home">Overview</a></li> -->
-            <li><a ng-class="{active: vm.active==0}" ui-sref="store-detail.leaflet-maps" ng-click="vm.active=0">Zone Analysis</a></li>
-            <li><a ng-class="{active: vm.active==1}" ui-sref="store-detail.visit" ng-click="vm.active=1">Path Analysis</a></li>
+          <!-- <li><a href="#home">Overview</a></li> -->
+          <li><a ng-class="{active: vm.active==0}" ui-sref="store-detail.leaflet-maps" ng-click="vm.active=0">Zone Analysis</a></li>
+          <li><a ng-class="{active: vm.active==1}" ui-sref="store-detail.visit" ng-click="vm.active=1">Path Analysis</a></li>
         </ul>
+        
+      </div>
     </div>
     <hr style="margin:0px">
     <div class="container store-tab-content" ui-view="submenu"></div>

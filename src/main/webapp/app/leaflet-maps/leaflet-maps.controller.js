@@ -5,48 +5,67 @@
       .module('isaApp')
       .controller('LeafletMapsController', LeafletMapsController);
 
-    LeafletMapsController.$inject = ['$scope', 'leafletData'];
+    LeafletMapsController.$inject = ['$scope', 'leafletData', 'leafletBoundsHelpers'];
 
-    function LeafletMapsController($scope, leafletData) {
+    function LeafletMapsController($scope, leafletData,leafletBoundsHelpers) {
 
-      angular.extend($scope, {
-        center: {
-          autoDiscover: true
-        },
-        overlays: {
-          search: {
-            name: 'search',
-            type: 'group',
-            visible: true,
-            layerParams: {
-              showOnSelector: false
-            }
-          }
-        }
-      });
 
-      leafletData.getLayers().then(function(baselayers) {
-        console.log(baselayers.overlays.search);
-        angular.extend($scope.controls, {
-          search: {
-            layer: baselayers.overlays.search
-          }
-        });
-      });
 
-      leafletData.getMap().then(function(map) {
-        map.addControl(new L.Control.Search({
-          url: 'http://nominatim.openstreetmap.org/search?format=json&q={s}',
-          jsonpParam: 'json_callback',
-          propertyName: 'display_name',
-          propertyLoc: ['lat', 'lon'],
-          circleLocation: false,
-          markerLocation: false,
-          autoType: false,
-          autoCollapse: true,
-          minLength: 2,
-          zoom: 10
-        }));
-      });
+            var maxBounds = leafletBoundsHelpers.createBoundsFromArray([[0, 0], [597, 793]]);
+            angular.extend($scope, {
+                defaults: {
+                  scrollWheelZoom: false,
+                  crs: 'Simple',
+                  maxZoom: 1,
+                  minZoom: 0
+                },
+                center: {
+                    lat: 0,
+                    lng: 0,
+                    zoom: 0
+                },
+                maxBounds: maxBounds,
+                layers: {
+                    baselayers: {
+                        sanfrancisco: {
+                            name: 'Supermarket',
+                            type: 'imageOverlay',
+                            url: 'content/images/plan3.png',
+                            bounds: [[0, 0], [597, 793]],
+                            layerParams: {
+                                showOnSelector: false,
+                                noWrap: true,
+                                // attribution: 'Sample'
+                            }
+                        }
+                    },
+                },
+                paths: {
+                  p1: {
+                      color: 'blue',
+                      weight: 4,
+                      opacity: 0.2,
+                      latlngs: [
+                          { lat: 580, lng: 600 },
+                          { lat: 470, lng: 550 },
+                          { lat: 420, lng: 300 },
+                          { lat: 420, lng: 50 },
+                          { lat: 210, lng: 50 },
+                          { lat: 210, lng: 450 },
+                          { lat: 50, lng: 450 }
+                      ],
+                      message: "Customer 1",
+                  }
+                },
+                markers:  [{
+                              "lat": 420,
+                              "lng": 300,
+                              "message": "staying for <strong>5s</strong>"
+                          }, {
+                              "lat": 210,
+                              "lng": 200,
+                              "message": "staying for <strong>7s</strong>"
+                      }]
+            });
     }
   })();

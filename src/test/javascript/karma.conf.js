@@ -28,6 +28,7 @@ module.exports = function (config) {
             'src/main/webapp/bower_components/messageformat/messageformat.js',
             'src/main/webapp/bower_components/leaflet/dist/leaflet-src.js',
             'src/main/webapp/bower_components/leaflet-search/dist/leaflet-search.src.js',
+            'src/main/webapp/bower_components/proj4/dist/proj4.js',
             'src/main/webapp/bower_components/angular/angular.js',
             'src/main/webapp/bower_components/angular-aria/angular-aria.js',
             'src/main/webapp/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
@@ -42,6 +43,7 @@ module.exports = function (config) {
             'src/main/webapp/bower_components/ng-file-upload/ng-file-upload.js',
             'src/main/webapp/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
             'src/main/webapp/bower_components/angular-simple-logger/dist/angular-simple-logger.js',
+            'src/main/webapp/bower_components/Proj4Leaflet/src/proj4leaflet.js',
             'src/main/webapp/bower_components/angular-mocks/angular-mocks.js',
             'src/main/webapp/bower_components/ui-leaflet/dist/ui-leaflet.js',
             // endbower
