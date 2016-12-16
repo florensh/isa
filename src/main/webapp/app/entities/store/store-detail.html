@@ -2,7 +2,7 @@
 
     <div class="headarea">
       <div class="container">
-        <h4><a ui-sref="store"><span>Stores</span></a><small style="padding: 0px 10px;"><span class="glyphicon glyphicon-menu-right"></span></small><img class="icon" src="content/images/shop2.png" alt="shop"/>{{vm.store.name}}</h4>
+        <h4><a ui-sref="store"><span>Stores</span></a><small style="padding: 0px 10px;"><span class="glyphicon glyphicon-menu-right"></span></small><!--<img class="icon" src="content/images/shop2.png" alt="shop"/>-->{{vm.store.name}}</h4>
         <h4><small><span class="glyphicon glyphicon-map-marker"></span> <span>{{vm.store.street}}, </span><span>{{vm.store.city}}</span></small></h4>
         <jhi-alert-error></jhi-alert-error>
       </div>
@@ -16,7 +16,7 @@
           <li><a ng-class="{active: vm.active==0}" ui-sref="store-detail.leaflet-maps" ng-click="vm.active=0">Zone Analysis</a></li>
           <li><a ng-class="{active: vm.active==1}" ui-sref="store-detail.visit" ng-click="vm.active=1">Path Analysis</a></li>
         </ul>
-        
+
       </div>
     </div>
     <hr style="margin:0px">

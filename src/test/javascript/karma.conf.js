@@ -29,6 +29,8 @@ module.exports = function (config) {
             'src/main/webapp/bower_components/leaflet/dist/leaflet-src.js',
             'src/main/webapp/bower_components/leaflet-search/dist/leaflet-search.src.js',
             'src/main/webapp/bower_components/proj4/dist/proj4.js',
+            'src/main/webapp/bower_components/Leaflet.awesome-markers/dist/leaflet.awesome-markers.js',
+            'src/main/webapp/bower_components/leaflet.heat/dist/leaflet-heat.js',
             'src/main/webapp/bower_components/angular/angular.js',
             'src/main/webapp/bower_components/angular-aria/angular-aria.js',
             'src/main/webapp/bower_components/angular-bootstrap/ui-bootstrap-tpls.js',

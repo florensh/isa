@@ -25,7 +25,9 @@
     "swagger-ui": "2.1.5",
     "ui-leaflet": "2.0.0",
     "leaflet-search": "2.7.0",
-    "Proj4Leaflet": "proj4leaflet#^0.7.2"
+    "Proj4Leaflet": "proj4leaflet#^0.7.2",
+    "Leaflet.awesome-markers": "^2.0.2",
+    "leaflet.heat": "Leaflet.heat#*"
   },
   "devDependencies": {
     "angular-mocks": "1.5.8"

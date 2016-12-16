@@ -12,19 +12,18 @@
 
 
 
-
-      var maxBounds = leafletBoundsHelpers.createBoundsFromArray([[0, 0], [597, 793]]);
+      var maxBounds = leafletBoundsHelpers.createBoundsFromArray([[0, 0], [1166, 981]]);
       angular.extend($scope, {
           defaults: {
             scrollWheelZoom: false,
             crs: 'Simple',
             maxZoom: 1,
-            minZoom: 0
+            minZoom: -2
           },
           center: {
               lat: 0,
               lng: 0,
-              zoom: 0
+              zoom: -1
           },
           maxBounds: maxBounds,
           layers: {
@@ -32,8 +31,8 @@
                   sanfrancisco: {
                       name: 'Supermarket',
                       type: 'imageOverlay',
-                      url: 'content/images/plan3.png',
-                      bounds: [[0, 0], [597, 793]],
+                      url: 'content/images/daheim_eg.jpg',
+                      bounds: [[0, 0], [1166, 981]],
                       layerParams: {
                           showOnSelector: false,
                           noWrap: true,
@@ -45,29 +44,38 @@
           paths: {
             p1: {
                 color: 'blue',
-                weight: 4,
-                opacity: 0.2,
+                weight: 10,
+                // stroke: true,
+                dashArray: "15, 2",
+                opacity: 0.1,
+                lineCap: "butt",
+                // lineJoin: "bevel",
                 latlngs: [
-                    { lat: 580, lng: 600 },
-                    { lat: 470, lng: 550 },
-                    { lat: 420, lng: 300 },
-                    { lat: 420, lng: 50 },
-                    { lat: 210, lng: 50 },
-                    { lat: 210, lng: 450 },
-                    { lat: 50, lng: 450 }
+                    { lat: 50, lng: 480 },
+                    { lat: 200, lng: 480 },
+                    { lat: 200, lng: 300 },
+                    { lat: 150, lng: 200 }
                 ],
-                message: "Customer 1",
+                message: "<h4>Path 1<br><small>23min</small></h4>",
             }
           },
           markers:  [{
-                        "lat": 420,
-                        "lng": 300,
-                        "message": "staying for <strong>5s</strong>"
-                    }, {
-                        "lat": 210,
+                        "lat": 150,
                         "lng": 200,
-                        "message": "staying for <strong>7s</strong>"
-                }]
+                        "message": "staying for <strong>5s</strong>"
+                    }
+                // ,{
+                //         "lat": 210,
+                //         "lng": 450,
+                //         "message": "staying for <strong>5s</strong>",
+                //         "icon": {
+                //             "type": 'awesomeMarker',
+                //             "icon": 'hourglass',
+                //             "markerColor": 'blue'
+                //         }
+                //     }
+
+                  ]
       });
 
 

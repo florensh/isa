@@ -9,7 +9,7 @@
 
     function LeafletMapsController($scope, leafletData,leafletBoundsHelpers) {
 
-
+var data = [];
 
             var maxBounds = leafletBoundsHelpers.createBoundsFromArray([[0, 0], [597, 793]]);
             angular.extend($scope, {
@@ -39,6 +39,18 @@
                             }
                         }
                     },
+                    overlays: {
+                      heat: {
+                        name: 'Heat Map',
+                        type: 'heat',
+                        data: data,
+                        layerOptions: {
+                            radius: 20,
+                            blur: 10
+                        },
+                        visible: true
+                    }
+                    }
                 },
                 paths: {
                   p1: {

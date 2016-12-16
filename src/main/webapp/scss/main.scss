@@ -392,7 +392,10 @@ Store
     margin-right: 5px;
     padding-bottom: 3px;
 }
-
+.leaflet-container {
+    background-color:rgba(255,0,0,0.0);
+    border: 1px solid #e7ebf3;
+}
 
 /* ==========================================================================
 list
