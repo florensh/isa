@@ -1,5 +1,5 @@
 /*!
-*  ui-leaflet 2.0.0 2016-10-05
+*  ui-leaflet 2.0.0 2016-10-04
 *  ui-leaflet - An AngularJS directive to easily interact with Leaflet maps
 *  git: https://github.com/angular-ui/ui-leaflet
 */
@@ -312,7 +312,6 @@ angular.module('ui-leaflet').factory('leafletBoundsHelpers', function (leafletLo
 angular.module('ui-leaflet').factory('leafletControlHelpers', function ($rootScope, leafletLogger, leafletHelpers, leafletLayerHelpers, leafletMapDefaults) {
     var isDefined = leafletHelpers.isDefined,
         isObject = leafletHelpers.isObject,
-        get = leafletHelpers.get,
         createLayer = leafletLayerHelpers.createLayer,
         _controls = {},
         errorHeader = leafletHelpers.errorHeader + ' [Controls] ',
@@ -320,7 +319,7 @@ angular.module('ui-leaflet').factory('leafletControlHelpers', function ($rootSco
 
     var _controlLayersMustBeVisible = function _controlLayersMustBeVisible(baselayers, overlays, mapId) {
         var defaults = leafletMapDefaults.getDefaults(mapId);
-        if (!get(defaults, 'controls.layers.visible')) {
+        if (!defaults.controls.layers.visible) {
             return false;
         }
 
@@ -358,7 +357,7 @@ angular.module('ui-leaflet').factory('leafletControlHelpers', function ($rootSco
         angular.extend(controlOptions, defaults.controls.layers.options);
 
         var control;
-        if (!!get(defaults, 'controls.layers.control')) {
+        if (defaults.controls.layers && isDefined(defaults.controls.layers.control)) {
             control = defaults.controls.layers.control.apply(this, [[], [], controlOptions]);
         } else {
             control = new L.control.layers([], [], controlOptions);
@@ -535,8 +534,8 @@ angular.module('ui-leaflet').service('leafletData', function (leafletLogger, $q,
         _private[itemName] = {};
     });
 
-    this.unresolveMap = function (mapId) {
-        var id = leafletHelpers.obtainEffectiveMapId(_private.map, mapId);
+    this.unresolveMap = function (scopeId) {
+        var id = leafletHelpers.obtainEffectiveMapId(_private.map, scopeId);
         _privateItems.forEach(function (itemName) {
             _private[itemName][id] = undefined;
         });
@@ -545,14 +544,14 @@ angular.module('ui-leaflet').service('leafletData', function (leafletLogger, $q,
     //int repetitive stuff (get and sets)
     _privateItems.forEach(function (itemName) {
         var name = upperFirst(itemName);
-        self['set' + name] = function (lObject, mapId) {
-            var defer = getUnresolvedDefer(_private[itemName], mapId);
+        self['set' + name] = function (lObject, scopeId) {
+            var defer = getUnresolvedDefer(_private[itemName], scopeId);
             defer.resolve(lObject);
-            setResolvedDefer(_private[itemName], mapId);
+            setResolvedDefer(_private[itemName], scopeId);
         };
 
-        self['get' + name] = function (mapId) {
-            var defer = getDefer(_private[itemName], mapId);
+        self['get' + name] = function (scopeId) {
+            var defer = getDefer(_private[itemName], scopeId);
             return defer.promise;
         };
     });
@@ -569,7 +568,7 @@ angular.module('ui-leaflet').service('leafletDirectiveControlsHelpers', function
 
     var _errorHeader = _mainErrorHeader + '[leafletDirectiveControlsHelpers';
 
-    var extend = function extend(id, thingToAddName, createFn, cleanFn) {
+    var _extend = function _extend(id, thingToAddName, createFn, cleanFn) {
         var _fnHeader = _errorHeader + '.extend] ';
         var extender = {};
         if (!_isDefined(thingToAddName)) {
@@ -590,14 +589,14 @@ angular.module('ui-leaflet').service('leafletDirectiveControlsHelpers', function
         }
 
         //add external control to create / destroy markers without a watch
-        leafletData.getDirectiveControls(id).then(function (controls) {
+        leafletData.getDirectiveControls().then(function (controls) {
             angular.extend(controls, extender);
             leafletData.setDirectiveControls(controls, id);
         });
     };
 
     return {
-        extend: extend
+        extend: _extend
     };
 });
 
@@ -693,16 +692,21 @@ angular.module('ui-leaflet').service('leafletHelpers', function ($q, $log, $time
     };
     _getObjectValue(obj,"bike.1") returns 'hi'
     this is getPath in ui-gmap
-     like _.get
-    http://stackoverflow.com/questions/2631001/javascript-test-for-existence-of-nested-object-key?page=1&tab=active#tab-top
      */
-    var _getObjectValue = function _getObjectValue(object, path) {
-        if (!object) return;
-        path = path.split('.');
-        var obj = object[path.shift()];
-        while (obj && path.length) {
-            obj = obj[path.shift()];
-        }return obj;
+    var _getObjectValue = function _getObjectValue(object, pathStr) {
+        var obj;
+        if (!object || !angular.isObject(object)) return;
+        //if the key is not a sting then we already have the value
+        if (pathStr === null || !angular.isString(pathStr)) {
+            return pathStr;
+        }
+        obj = object;
+        pathStr.split('.').forEach(function (value) {
+            if (obj) {
+                obj = obj[value];
+            }
+        });
+        return obj;
     };
 
     /*
@@ -729,21 +733,18 @@ angular.module('ui-leaflet').service('leafletHelpers', function ($q, $log, $time
     };
 
     function _obtainEffectiveMapId(d, mapId) {
-        var id,
-            keys = Object.keys(d);
-
+        var id, i;
         if (!angular.isDefined(mapId)) {
-            if (keys.length === 0 || keys.length === 1 && keys[0] === 'main') {
-                //default non id attribute map
-                // OR one key 'main'
-                /*
-                    Main Reason:
-                    Initally if we have only one map and no "id" then d will be undefined initially.
-                    On subsequent runs it will be just d.main so we need to return the last map.
-                */
+            if (Object.keys(d).length === 0) {
                 id = "main";
+            } else if (Object.keys(d).length >= 1) {
+                for (i in d) {
+                    if (d.hasOwnProperty(i)) {
+                        id = i;
+                    }
+                }
             } else {
-                throw new Error(_errorHeader + "- You have more than 1 map on the DOM, you must provide the map ID to the leafletData.getXXX call. Where one of the following mapIds " + Object.keys(d).join(',') + ' are available.');
+                $log.error(_errorHeader + "- You have more than 1 map on the DOM, you must provide the map ID to the leafletData.getXXX call");
             }
         } else {
             id = mapId;
@@ -808,7 +809,6 @@ angular.module('ui-leaflet').service('leafletHelpers', function ($q, $log, $time
     var directiveNormalize = function directiveNormalize(name) {
         return camelCase(name.replace(PREFIX_REGEXP, ""));
     };
-
     // END AngularJS port
 
     var _watchTrapDelayMilliSec = 10;
@@ -834,7 +834,6 @@ angular.module('ui-leaflet').service('leafletHelpers', function ($q, $log, $time
         clone: _clone,
         errorHeader: _errorHeader,
         getObjectValue: _getObjectValue,
-        get: _getObjectValue,
         getObjectArrayPath: _getObjectArrayPath,
         getObjectDotPath: _getObjectDotPath,
         defaultTo: function defaultTo(val, _default) {

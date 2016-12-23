@@ -1,6 +1,8 @@
 package de.hshn.se;
 
 import java.time.ZonedDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -54,12 +56,13 @@ public class TestDataLoader {
 		visit.setVisitor(visitor);
 		visit = this.visitRepository.save(visit);
 
+		Set<Waypoint> waypoints = new HashSet<Waypoint>();
 		Waypoint wp1 = new Waypoint();
 		wp1.setX(480.0f);
 		wp1.setY(50.0f);
 		wp1.setVisit(visit);
 		wp1.setTimestamp(0l);
-		this.waypointRepository.save(wp1);
+		waypoints.add(this.waypointRepository.save(wp1));
 		
 		
 		Waypoint wp2 = new Waypoint();
@@ -67,7 +70,10 @@ public class TestDataLoader {
 		wp2.setY(200.0f);
 		wp2.setVisit(visit);
 		wp2.setTimestamp(1000l);
-		this.waypointRepository.save(wp2);
+		waypoints.add(this.waypointRepository.save(wp2));
+		
+		visit.setWaypoints(waypoints);
+		this.visitRepository.save(visit);
 
 	}
 

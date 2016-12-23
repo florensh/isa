@@ -14,6 +14,7 @@ var argv = require('yargs').argv;
  */
 
 module.exports = function (grunt, options) {
+    console.log('version:', argv.ui_leaflet_ver || _pkg.version);
     return {
         options: {
             changelogOpts: {

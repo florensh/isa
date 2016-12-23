@@ -2,6 +2,7 @@
   "name": "ui-leaflet",
   "author": "https://github.com/angular-ui/ui-leaflet/graphs/contributors",
   "description": "ui-leaflet - An AngularJS directive to easily interact with Leaflet maps",
+  "version": "2.0.0",
   "homepage": "http://angular-ui.github.io/ui-leaflet/",
   "keywords": [
     "angularjs",
@@ -37,14 +38,14 @@
     "Leaflet.utfgrid": "danzel/Leaflet.utfgrid",
     "Leaflet.awesome-markers": "*",
     "leaflet-providers": "~1.1.5",
-    "leaflet.vector-markers": "~0.0.6",
+    "leaflet.vector-markers": "0.0.4",
     "webgl-heatmap-leaflet": "*",
     "leaflet-plugins": "*",
     "esri-leaflet": "~1.0.4",
     "proj4": "*",
     "font-awesome": "~4.3.x",
-    "proj4leaflet": "~0.x",
-    "Leaflet.MakiMarkers": "~2.x",
+    "proj4leaflet": "*",
+    "Leaflet.MakiMarkers": "*",
     "Leaflet.heat": "https://github.com/Leaflet/Leaflet.heat/archive/gh-pages.tar.gz",
     "Leaflet.ExtraMarkers": "https://github.com/coryasilva/Leaflet.ExtraMarkers/archive/v1.0.1.tar.gz",
     "Leaflet.fullscreen": "http://github.com/Leaflet/Leaflet.fullscreen/archive/v0.0.4.tar.gz",
@@ -68,17 +69,16 @@
     "*.md",
     "Gruntfile.js",
     "package.json",
-    "logo.svg",
-    "bower.json",
-    "dist/coverage/"
+    "dist/coverage/",
+    "logo.svg"
   ],
-  "_release": "d07de17fe5",
+  "_release": "2.0.0",
   "_resolution": {
-    "type": "branch",
-    "branch": "master",
-    "commit": "d07de17fe59088967cc601433255ac37ba9a060a"
+    "type": "version",
+    "tag": "v2.0.0",
+    "commit": "919b862389ddddc85c197746f3126fd24de0dc42"
   },
-  "_source": "https://github.com/elesdoar/ui-leaflet.git",
-  "_target": "master",
-  "_originalSource": "elesdoar/ui-leaflet"
+  "_source": "https://github.com/angular-ui/ui-leaflet.git",
+  "_target": "2.0.0",
+  "_originalSource": "ui-leaflet"
 }

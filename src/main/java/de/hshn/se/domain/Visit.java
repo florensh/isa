@@ -3,11 +3,15 @@ package de.hshn.se.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A Visit.
@@ -34,8 +38,19 @@ public class Visit implements Serializable {
     @ManyToOne
     @NotNull
     private Visitor visitor;
+    
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "visit")
+    private Set<Waypoint> waypoints = new HashSet<Waypoint>();
 
-    public Long getId() {
+    public Set<Waypoint> getWaypoints() {
+		return waypoints;
+	}
+
+	public void setWaypoints(Set<Waypoint> waypoints) {
+		this.waypoints = waypoints;
+	}
+
+	public Long getId() {
         return id;
     }
 

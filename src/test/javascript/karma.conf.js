@@ -26,6 +26,7 @@ module.exports = function (config) {
             'src/main/webapp/bower_components/jquery/dist/jquery.js',
             'src/main/webapp/bower_components/json3/lib/json3.js',
             'src/main/webapp/bower_components/messageformat/messageformat.js',
+            'src/main/webapp/bower_components/lodash/lodash.js',
             'src/main/webapp/bower_components/leaflet/dist/leaflet-src.js',
             'src/main/webapp/bower_components/leaflet-search/dist/leaflet-search.src.js',
             'src/main/webapp/bower_components/proj4/dist/proj4.js',

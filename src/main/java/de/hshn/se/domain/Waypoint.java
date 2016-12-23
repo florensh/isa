@@ -3,6 +3,8 @@ package de.hshn.se.domain;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -36,6 +38,7 @@ public class Waypoint implements Serializable {
 
     @ManyToOne
     @NotNull
+    @JsonIgnore
     private Visit visit;
 
     public Long getId() {

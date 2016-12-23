@@ -38,11 +38,11 @@ module.exports =
 
     changelog: ['conventionalChangelog']
 
-    'bump@':[ 'bump-only', 'default', 'changelog', 'bump-commit' ]
+    'bump@':[ 'bumponly', 'default', 'changelog', 'bumpcommit' ]
 
-    'bump@minor':[ 'bump-only:minor', 'default', 'changelog', 'bump-commit' ]
+    'bump@minor':[ 'bumponly:minor', 'default', 'changelog', 'bumpcommit' ]
 
-    'bump@major':[ 'bump-only:major', 'default', 'changelog', 'bump-commit' ]
+    'bump@major':[ 'bumponly:major', 'default', 'changelog', 'bumpcommit' ]
     #To Update examples for Viewer
     examples:[ 'shell:examples', 'concat:examples' ]
 

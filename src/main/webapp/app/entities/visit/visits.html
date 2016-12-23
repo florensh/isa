@@ -41,10 +41,10 @@
 
 
 <div class="list-grp">
-  <div class="list-elem" ng-repeat="visit in vm.visits track by visit.id" ui-sref="store-detail({id:store.id})">
+  <div class="list-elem" ng-repeat="visit in vm.visits track by visit.id">
     <div class="row">
       <div class="col-md-1">
-        <input type="checkbox">
+        <input type="checkbox" ng-model="vm.activePaths.ids[visit.id]" ng-click="vm.refreshMap()">
       </div>
       <div class="col-md-10">
         <strong>{{visit.dateOfVisit | date:'EEE'}}</strong>
@@ -53,6 +53,7 @@
       </div>
     </div>
   </div>
+  <!-- <pre ng-bind="vm.activePaths.ids | json"></pre> -->
 </div>
 
 
