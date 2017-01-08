@@ -15,6 +15,7 @@ import de.hshn.se.domain.Store;
 import de.hshn.se.domain.Visit;
 import de.hshn.se.domain.Visitor;
 import de.hshn.se.domain.Waypoint;
+import de.hshn.se.repository.MeasurementDatasetRepository;
 import de.hshn.se.repository.StoreRepository;
 import de.hshn.se.repository.VisitRepository;
 import de.hshn.se.repository.VisitorRepository;
@@ -22,6 +23,9 @@ import de.hshn.se.repository.WaypointRepository;
 
 @Component
 public class TestDataLoader {
+	
+	@Autowired
+	private MeasurementDatasetRepository measurementDatasetRepository;
 
 	@Autowired
 	private StoreRepository storeRepository;
@@ -39,6 +43,7 @@ public class TestDataLoader {
 	@Profile(Constants.SPRING_PROFILE_DEVELOPMENT)
 	public void loadData() {
 		
+		this.measurementDatasetRepository.deleteAll();
 		this.waypointRepository.deleteAll();
 		this.visitRepository.deleteAll();
 		this.visitorRepository.deleteAll();
