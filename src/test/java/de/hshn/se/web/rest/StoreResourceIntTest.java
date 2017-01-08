@@ -53,6 +53,12 @@ public class StoreResourceIntTest {
     private static final String DEFAULT_COUNTRY = "AAAAAAAAAA";
     private static final String UPDATED_COUNTRY = "BBBBBBBBBB";
 
+    private static final Float DEFAULT_LAT = 1F;
+    private static final Float UPDATED_LAT = 2F;
+
+    private static final Float DEFAULT_LON = 1F;
+    private static final Float UPDATED_LON = 2F;
+
     @Inject
     private StoreRepository storeRepository;
 
@@ -94,7 +100,9 @@ public class StoreResourceIntTest {
                 .street(DEFAULT_STREET)
                 .city(DEFAULT_CITY)
                 .zip(DEFAULT_ZIP)
-                .country(DEFAULT_COUNTRY);
+                .country(DEFAULT_COUNTRY)
+                .lat(DEFAULT_LAT)
+                .lon(DEFAULT_LON);
         return store;
     }
 
@@ -124,6 +132,8 @@ public class StoreResourceIntTest {
         assertThat(testStore.getCity()).isEqualTo(DEFAULT_CITY);
         assertThat(testStore.getZip()).isEqualTo(DEFAULT_ZIP);
         assertThat(testStore.getCountry()).isEqualTo(DEFAULT_COUNTRY);
+        assertThat(testStore.getLat()).isEqualTo(DEFAULT_LAT);
+        assertThat(testStore.getLon()).isEqualTo(DEFAULT_LON);
     }
 
     @Test
@@ -238,6 +248,42 @@ public class StoreResourceIntTest {
 
     @Test
     @Transactional
+    public void checkLatIsRequired() throws Exception {
+        int databaseSizeBeforeTest = storeRepository.findAll().size();
+        // set the field null
+        store.setLat(null);
+
+        // Create the Store, which fails.
+
+        restStoreMockMvc.perform(post("/api/stores")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(store)))
+            .andExpect(status().isBadRequest());
+
+        List<Store> storeList = storeRepository.findAll();
+        assertThat(storeList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkLonIsRequired() throws Exception {
+        int databaseSizeBeforeTest = storeRepository.findAll().size();
+        // set the field null
+        store.setLon(null);
+
+        // Create the Store, which fails.
+
+        restStoreMockMvc.perform(post("/api/stores")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(store)))
+            .andExpect(status().isBadRequest());
+
+        List<Store> storeList = storeRepository.findAll();
+        assertThat(storeList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllStores() throws Exception {
         // Initialize the database
         storeRepository.saveAndFlush(store);
@@ -251,7 +297,9 @@ public class StoreResourceIntTest {
             .andExpect(jsonPath("$.[*].street").value(hasItem(DEFAULT_STREET.toString())))
             .andExpect(jsonPath("$.[*].city").value(hasItem(DEFAULT_CITY.toString())))
             .andExpect(jsonPath("$.[*].zip").value(hasItem(DEFAULT_ZIP.toString())))
-            .andExpect(jsonPath("$.[*].country").value(hasItem(DEFAULT_COUNTRY.toString())));
+            .andExpect(jsonPath("$.[*].country").value(hasItem(DEFAULT_COUNTRY.toString())))
+            .andExpect(jsonPath("$.[*].lat").value(hasItem(DEFAULT_LAT.doubleValue())))
+            .andExpect(jsonPath("$.[*].lon").value(hasItem(DEFAULT_LON.doubleValue())));
     }
 
     @Test
@@ -269,7 +317,9 @@ public class StoreResourceIntTest {
             .andExpect(jsonPath("$.street").value(DEFAULT_STREET.toString()))
             .andExpect(jsonPath("$.city").value(DEFAULT_CITY.toString()))
             .andExpect(jsonPath("$.zip").value(DEFAULT_ZIP.toString()))
-            .andExpect(jsonPath("$.country").value(DEFAULT_COUNTRY.toString()));
+            .andExpect(jsonPath("$.country").value(DEFAULT_COUNTRY.toString()))
+            .andExpect(jsonPath("$.lat").value(DEFAULT_LAT.doubleValue()))
+            .andExpect(jsonPath("$.lon").value(DEFAULT_LON.doubleValue()));
     }
 
     @Test
@@ -295,7 +345,9 @@ public class StoreResourceIntTest {
                 .street(UPDATED_STREET)
                 .city(UPDATED_CITY)
                 .zip(UPDATED_ZIP)
-                .country(UPDATED_COUNTRY);
+                .country(UPDATED_COUNTRY)
+                .lat(UPDATED_LAT)
+                .lon(UPDATED_LON);
 
         restStoreMockMvc.perform(put("/api/stores")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -311,6 +363,8 @@ public class StoreResourceIntTest {
         assertThat(testStore.getCity()).isEqualTo(UPDATED_CITY);
         assertThat(testStore.getZip()).isEqualTo(UPDATED_ZIP);
         assertThat(testStore.getCountry()).isEqualTo(UPDATED_COUNTRY);
+        assertThat(testStore.getLat()).isEqualTo(UPDATED_LAT);
+        assertThat(testStore.getLon()).isEqualTo(UPDATED_LON);
     }
 
     @Test

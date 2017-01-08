@@ -36,6 +36,20 @@
             "fieldValidateRules": [
                 "required"
             ]
+        },
+        {
+            "fieldName": "lat",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "lon",
+            "fieldType": "Float",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "changelogDate": "20161212081017",

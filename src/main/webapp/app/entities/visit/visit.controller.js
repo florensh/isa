@@ -105,7 +105,7 @@
                 weight: 10,
                 // stroke: true,
                 dashArray: "15, 2",
-                opacity: 0.1,
+                opacity: 0.4,
                 lineCap: "butt",
                 // lineJoin: "bevel",
                 latlngs: _.map(visit.waypoints, function(wp) {

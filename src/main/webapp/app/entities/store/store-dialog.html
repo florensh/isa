@@ -73,6 +73,38 @@
                 </p>
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label" for="field_lat">Lat</label>
+            <input type="number" class="form-control" name="lat" id="field_lat"
+                    ng-model="vm.store.lat"
+                    required />
+            <div ng-show="editForm.lat.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.lat.$error.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.lat.$error.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_lon">Lon</label>
+            <input type="number" class="form-control" name="lon" id="field_lon"
+                    ng-model="vm.store.lon"
+                    required />
+            <div ng-show="editForm.lon.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.lon.$error.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.lon.$error.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
 
     </div>
     <div class="modal-footer">

@@ -38,12 +38,20 @@ public class TestDataLoader {
 	@PostConstruct
 	@Profile(Constants.SPRING_PROFILE_DEVELOPMENT)
 	public void loadData() {
+		
+		this.waypointRepository.deleteAll();
+		this.visitRepository.deleteAll();
+		this.visitorRepository.deleteAll();
+		this.storeRepository.deleteAll();
+		
 		Store store = new Store();
-		store.setName("Kaufland Neckarsulm");
-		store.setCity("Neckarsulm");
+		store.setName("Daheim");
+		store.setCity("Bad Wimpfen");
 		store.setZip("74206");
 		store.setCountry("Deutschland");
-		store.setStreet("Hauptstraße 1");
+		store.setStreet("Marktplatz 9");
+		store.setLat(49.23055156f);
+		store.setLon(9.16217502f);
 
 		store = this.storeRepository.save(store);
 

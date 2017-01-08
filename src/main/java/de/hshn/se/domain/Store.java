@@ -42,6 +42,14 @@ public class Store implements Serializable {
     @Column(name = "country", nullable = false)
     private String country;
 
+    @NotNull
+    @Column(name = "lat", nullable = false)
+    private Float lat;
+
+    @NotNull
+    @Column(name = "lon", nullable = false)
+    private Float lon;
+
     public Long getId() {
         return id;
     }
@@ -115,6 +123,32 @@ public class Store implements Serializable {
         this.country = country;
     }
 
+    public Float getLat() {
+        return lat;
+    }
+
+    public Store lat(Float lat) {
+        this.lat = lat;
+        return this;
+    }
+
+    public void setLat(Float lat) {
+        this.lat = lat;
+    }
+
+    public Float getLon() {
+        return lon;
+    }
+
+    public Store lon(Float lon) {
+        this.lon = lon;
+        return this;
+    }
+
+    public void setLon(Float lon) {
+        this.lon = lon;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -144,6 +178,8 @@ public class Store implements Serializable {
             ", city='" + city + "'" +
             ", zip='" + zip + "'" +
             ", country='" + country + "'" +
+            ", lat='" + lat + "'" +
+            ", lon='" + lon + "'" +
             '}';
     }
 }
