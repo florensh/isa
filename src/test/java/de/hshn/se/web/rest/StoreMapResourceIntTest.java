@@ -1,11 +1,24 @@
 package de.hshn.se.web.rest;
 
-import de.hshn.se.IsaApp;
+import static de.hshn.se.web.rest.TestUtil.sameInstant;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import de.hshn.se.domain.StoreMap;
-import de.hshn.se.domain.Store;
-import de.hshn.se.repository.StoreMapRepository;
-import de.hshn.se.service.StoreMapService;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,19 +34,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.ZoneId;
-import java.util.List;
-
-import static de.hshn.se.web.rest.TestUtil.sameInstant;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import de.hshn.se.IsaApp;
+import de.hshn.se.domain.Store;
+import de.hshn.se.domain.StoreMap;
+import de.hshn.se.repository.StoreMapRepository;
+import de.hshn.se.service.StoreMapService;
 
 /**
  * Test class for the StoreMapResource REST controller.
@@ -50,8 +55,8 @@ public class StoreMapResourceIntTest {
     private static final ZonedDateTime DEFAULT_VALIDITY_END = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_VALIDITY_END = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-    private static final String DEFAULT_URL = "AAAAAAAAAA";
-    private static final String UPDATED_URL = "BBBBBBBBBB";
+	private static final String DEFAULT_URL = "http://localhost:8080/maps/hshn.svg";
+	private static final String UPDATED_URL = "http://localhost:8080/maps/hshn.svg";
 
     @Inject
     private StoreMapRepository storeMapRepository;

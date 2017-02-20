@@ -1,15 +1,18 @@
 package de.hshn.se.service.impl;
 
-import de.hshn.se.service.MeasurementDatasetService;
-import de.hshn.se.domain.MeasurementDataset;
-import de.hshn.se.repository.MeasurementDatasetRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
 import javax.inject.Inject;
-import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import de.hshn.se.domain.MeasurementDataset;
+import de.hshn.se.repository.MeasurementDatasetRepository;
+import de.hshn.se.service.MeasurementDatasetService;
+import de.hshn.se.service.VisitService;
 
 /**
  * Service Implementation for managing MeasurementDataset.
@@ -23,15 +26,20 @@ public class MeasurementDatasetServiceImpl implements MeasurementDatasetService{
     @Inject
     private MeasurementDatasetRepository measurementDatasetRepository;
 
+	@Inject
+	private VisitService visitService;
+
     /**
      * Save a measurementDataset.
      *
      * @param measurementDataset the entity to save
      * @return the persisted entity
      */
-    public MeasurementDataset save(MeasurementDataset measurementDataset) {
-        log.debug("Request to save MeasurementDataset : {}", measurementDataset);
+    @Override
+	public MeasurementDataset save(MeasurementDataset measurementDataset) {
+		log.info("Request to save MeasurementDataset : {}", measurementDataset);
         MeasurementDataset result = measurementDatasetRepository.save(measurementDataset);
+		// visitService.create(result);
         return result;
     }
 
@@ -40,7 +48,8 @@ public class MeasurementDatasetServiceImpl implements MeasurementDatasetService{
      *  
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Override
+	@Transactional(readOnly = true) 
     public List<MeasurementDataset> findAll() {
         log.debug("Request to get all MeasurementDatasets");
         List<MeasurementDataset> result = measurementDatasetRepository.findAll();
@@ -54,7 +63,8 @@ public class MeasurementDatasetServiceImpl implements MeasurementDatasetService{
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Override
+	@Transactional(readOnly = true) 
     public MeasurementDataset findOne(Long id) {
         log.debug("Request to get MeasurementDataset : {}", id);
         MeasurementDataset measurementDataset = measurementDatasetRepository.findOne(id);
@@ -66,7 +76,8 @@ public class MeasurementDatasetServiceImpl implements MeasurementDatasetService{
      *
      *  @param id the id of the entity
      */
-    public void delete(Long id) {
+    @Override
+	public void delete(Long id) {
         log.debug("Request to delete MeasurementDataset : {}", id);
         measurementDatasetRepository.delete(id);
     }

@@ -4,13 +4,9 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import de.hshn.se.config.Constants;
 import de.hshn.se.domain.Store;
 import de.hshn.se.domain.Visit;
 import de.hshn.se.domain.Visitor;
@@ -39,11 +35,11 @@ public class TestDataLoader {
 	@Autowired
 	private WaypointRepository waypointRepository;
 
-	@PostConstruct
-	@Profile(Constants.SPRING_PROFILE_DEVELOPMENT)
+	// @PostConstruct
+	// @Profile(Constants.SPRING_PROFILE_DEVELOPMENT)
 	public void loadData() {
 		
-		this.measurementDatasetRepository.deleteAll();
+		// this.measurementDatasetRepository.deleteAll();
 		this.waypointRepository.deleteAll();
 		this.visitRepository.deleteAll();
 		this.visitorRepository.deleteAll();

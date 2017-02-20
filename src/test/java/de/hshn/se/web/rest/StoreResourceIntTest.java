@@ -1,10 +1,19 @@
 package de.hshn.se.web.rest;
 
-import de.hshn.se.IsaApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import de.hshn.se.domain.Store;
-import de.hshn.se.repository.StoreRepository;
-import de.hshn.se.service.StoreService;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,14 +29,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import de.hshn.se.IsaApp;
+import de.hshn.se.domain.Store;
+import de.hshn.se.repository.StoreRepository;
+import de.hshn.se.service.StoreService;
 
 /**
  * Test class for the StoreResource REST controller.
@@ -38,26 +43,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = IsaApp.class)
 public class StoreResourceIntTest {
 
-    private static final String DEFAULT_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_NAME = "BBBBBBBBBB";
+	private static final String DEFAULT_NAME = "Hochschule Heilbronn Bibliothek";
+	private static final String UPDATED_NAME = "Hochschule Heilbronn Bibliothek";
 
-    private static final String DEFAULT_STREET = "AAAAAAAAAA";
-    private static final String UPDATED_STREET = "BBBBBBBBBB";
+	private static final String DEFAULT_STREET = "Max-Planck-Straße";
+	private static final String UPDATED_STREET = "Max-Planck-Straße";
 
-    private static final String DEFAULT_CITY = "AAAAAAAAAA";
-    private static final String UPDATED_CITY = "BBBBBBBBBB";
+	private static final String DEFAULT_CITY = "Heilbronn";
+	private static final String UPDATED_CITY = "Heilbronn";
 
-    private static final String DEFAULT_ZIP = "AAAAAAAAAA";
-    private static final String UPDATED_ZIP = "BBBBBBBBBB";
+	private static final String DEFAULT_ZIP = "74081";
+	private static final String UPDATED_ZIP = "74081";
 
-    private static final String DEFAULT_COUNTRY = "AAAAAAAAAA";
-    private static final String UPDATED_COUNTRY = "BBBBBBBBBB";
+	private static final String DEFAULT_COUNTRY = "Deutschland";
+	private static final String UPDATED_COUNTRY = "Deutschland";
 
-    private static final Float DEFAULT_LAT = 1F;
-    private static final Float UPDATED_LAT = 2F;
+	private static final Float DEFAULT_LAT = 49.123f;
+	private static final Float UPDATED_LAT = 49.123f;
 
-    private static final Float DEFAULT_LON = 1F;
-    private static final Float UPDATED_LON = 2F;
+	private static final Float DEFAULT_LON = 9.211f;
+	private static final Float UPDATED_LON = 9.211f;
 
     @Inject
     private StoreRepository storeRepository;

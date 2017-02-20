@@ -1,16 +1,28 @@
 package de.hshn.se.service;
 
-import de.hshn.se.domain.Visit;
-import de.hshn.se.repository.VisitRepository;
+import java.util.Set;
+
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
-import java.util.List;
+import de.hshn.se.PathGenerator;
+import de.hshn.se.domain.MeasurementDataset;
+import de.hshn.se.domain.Store;
+import de.hshn.se.domain.StoreMap;
+import de.hshn.se.domain.Visit;
+import de.hshn.se.domain.Visitor;
+import de.hshn.se.domain.Waypoint;
+import de.hshn.se.repository.StoreMapRepository;
+import de.hshn.se.repository.StoreRepository;
+import de.hshn.se.repository.VisitRepository;
+import de.hshn.se.repository.VisitorRepository;
+import de.hshn.se.repository.WaypointRepository;
 
 /**
  * Service Implementation for managing Visit.
@@ -23,6 +35,18 @@ public class VisitService {
     
     @Inject
     private VisitRepository visitRepository;
+
+	@Inject
+	private StoreRepository storeRepository;
+
+	@Inject
+	private VisitorRepository visitorRepository;
+
+	@Inject
+	private WaypointRepository waypointRepository;
+
+	@Inject
+	private StoreMapRepository storeMapRepository;
 
     /**
      * Save a visit.
@@ -71,4 +95,26 @@ public class VisitService {
         log.debug("Request to delete Visit : {}", id);
         visitRepository.delete(id);
     }
+
+	public void create(MeasurementDataset measurementSet) {
+
+		Visit visit = new Visit();
+		Store store = this.storeRepository.findOne(measurementSet.getStoreId());
+
+		StoreMap map = this.storeMapRepository.findByStoreIdAndValidityStartBeforeAndValidityEndAfter(store.getId(),
+				null, null);
+
+		Visitor visitor = new Visitor();
+		visitor = this.visitorRepository.save(visitor);
+
+		visit.setVisitor(visitor);
+		visit.setStore(store);
+
+		Set<Waypoint> waypoints = PathGenerator.bpf(2000, measurementSet, store, map);
+		if (waypoints != null && waypoints.isEmpty()) {
+			visit.setWaypoints(waypoints);
+			this.waypointRepository.save(waypoints);
+		}
+
+	}
 }

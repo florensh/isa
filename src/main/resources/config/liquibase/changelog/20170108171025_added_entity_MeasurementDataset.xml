@@ -36,7 +36,7 @@
                 <constraints nullable="false" />
             </column>
             
-            <column name="start_lan" type="double">
+            <column name="start_lat" type="double">
                 <constraints nullable="false" />
             </column>
             

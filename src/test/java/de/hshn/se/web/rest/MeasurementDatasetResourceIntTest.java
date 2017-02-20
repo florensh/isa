@@ -1,12 +1,26 @@
 package de.hshn.se.web.rest;
 
-import de.hshn.se.IsaApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import de.hshn.se.domain.MeasurementDataset;
-import de.hshn.se.repository.MeasurementDatasetRepository;
-import de.hshn.se.service.MeasurementDatasetService;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -14,21 +28,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import de.hshn.se.IsaApp;
+import de.hshn.se.domain.MeasurementDataset;
+import de.hshn.se.repository.MeasurementDatasetRepository;
+import de.hshn.se.service.MeasurementDatasetService;
 
 /**
  * Test class for the MeasurementDatasetResource REST controller.
@@ -39,23 +49,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = IsaApp.class)
 public class MeasurementDatasetResourceIntTest {
 
-    private static final String DEFAULT_MEASUREMENTS = "AAAAAAAAAA";
-    private static final String UPDATED_MEASUREMENTS = "BBBBBBBBBB";
+	private static final String DEFAULT_MEASUREMENTS = "[{\"accuracy\":null,\"direction\":-1.5515637,\"lat\":null,\"length\":0.65,\"lon\":null,\"magx\":62.1,\"magy\":-38.8,\"magz\":-51.0,\"timestamp\":1487584503514},{\"accuracy\":null,\"direction\":0.62890315,\"lat\":null,\"length\":0.65,\"lon\":null,\"magx\":77.6,\"magy\":-29.0,\"magz\":-64.8,\"timestamp\":1487584503805},{\"accuracy\":null,\"direction\":-1.7667792,\"lat\":null,\"length\":0.65,\"lon\":null,\"magx\":61.0,\"magy\":-39.1,\"magz\":4.0,\"timestamp\":1487584504535}]";
+	private static final String UPDATED_MEASUREMENTS = "[{\"accuracy\":null,\"direction\":-1.5515637,\"lat\":null,\"length\":0.65,\"lon\":null,\"magx\":62.1,\"magy\":-38.8,\"magz\":-51.0,\"timestamp\":1487584503514},{\"accuracy\":null,\"direction\":0.62890315,\"lat\":null,\"length\":0.65,\"lon\":null,\"magx\":77.6,\"magy\":-29.0,\"magz\":-64.8,\"timestamp\":1487584503805},{\"accuracy\":null,\"direction\":-1.7667792,\"lat\":null,\"length\":0.65,\"lon\":null,\"magx\":61.0,\"magy\":-39.1,\"magz\":4.0,\"timestamp\":1487584504535}]";
 
     private static final Long DEFAULT_STORE_ID = 1L;
     private static final Long UPDATED_STORE_ID = 2L;
 
-    private static final String DEFAULT_DEVICE_IDENTIFICATION = "AAAAAAAAAA";
-    private static final String UPDATED_DEVICE_IDENTIFICATION = "BBBBBBBBBB";
+	private static final String DEFAULT_DEVICE_IDENTIFICATION = "00-80-41-ae-fd-7e";
+	private static final String UPDATED_DEVICE_IDENTIFICATION = "00-80-41-ae-fd-8e";
 
-    private static final Double DEFAULT_START_LAN = 1D;
-    private static final Double UPDATED_START_LAN = 2D;
+	private static final Double DEFAULT_START_LAT = 49.123113d;
+	private static final Double UPDATED_START_LAT = 49.123112d;
 
-    private static final Double DEFAULT_START_LON = 1D;
-    private static final Double UPDATED_START_LON = 2D;
+	private static final Double DEFAULT_START_LON = 9.211183d;
+	private static final Double UPDATED_START_LON = 9.211182d;
 
-    private static final Float DEFAULT_START_ACCURACY = 1F;
-    private static final Float UPDATED_START_ACCURACY = 2F;
+	private static final Float DEFAULT_START_ACCURACY = 12F;
+	private static final Float UPDATED_START_ACCURACY = 8F;
 
     @Inject
     private MeasurementDatasetRepository measurementDatasetRepository;
@@ -76,6 +86,9 @@ public class MeasurementDatasetResourceIntTest {
 
     private MeasurementDataset measurementDataset;
 
+	@Rule
+	public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/docs/asciidoc/snippets");
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -83,7 +96,8 @@ public class MeasurementDatasetResourceIntTest {
         ReflectionTestUtils.setField(measurementDatasetResource, "measurementDatasetService", measurementDatasetService);
         this.restMeasurementDatasetMockMvc = MockMvcBuilders.standaloneSetup(measurementDatasetResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setMessageConverters(jacksonMessageConverter).build();
+				.setMessageConverters(jacksonMessageConverter).apply(documentationConfiguration(this.restDocumentation))
+				.build();
     }
 
     /**
@@ -97,7 +111,7 @@ public class MeasurementDatasetResourceIntTest {
                 .measurements(DEFAULT_MEASUREMENTS)
                 .storeId(DEFAULT_STORE_ID)
                 .deviceIdentification(DEFAULT_DEVICE_IDENTIFICATION)
-                .startLan(DEFAULT_START_LAN)
+				.startLat(DEFAULT_START_LAT)
                 .startLon(DEFAULT_START_LON)
                 .startAccuracy(DEFAULT_START_ACCURACY);
         return measurementDataset;
@@ -118,6 +132,7 @@ public class MeasurementDatasetResourceIntTest {
         restMeasurementDatasetMockMvc.perform(post("/api/measurement-datasets")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(measurementDataset)))
+				.andDo(document("createMeasurementDatasetUsingPOST", preprocessResponse(prettyPrint())))
             .andExpect(status().isCreated());
 
         // Validate the MeasurementDataset in the database
@@ -127,7 +142,7 @@ public class MeasurementDatasetResourceIntTest {
         assertThat(testMeasurementDataset.getMeasurements()).isEqualTo(DEFAULT_MEASUREMENTS);
         assertThat(testMeasurementDataset.getStoreId()).isEqualTo(DEFAULT_STORE_ID);
         assertThat(testMeasurementDataset.getDeviceIdentification()).isEqualTo(DEFAULT_DEVICE_IDENTIFICATION);
-        assertThat(testMeasurementDataset.getStartLan()).isEqualTo(DEFAULT_START_LAN);
+		assertThat(testMeasurementDataset.getStartLat()).isEqualTo(DEFAULT_START_LAT);
         assertThat(testMeasurementDataset.getStartLon()).isEqualTo(DEFAULT_START_LON);
         assertThat(testMeasurementDataset.getStartAccuracy()).isEqualTo(DEFAULT_START_ACCURACY);
     }
@@ -211,7 +226,7 @@ public class MeasurementDatasetResourceIntTest {
     public void checkStartLanIsRequired() throws Exception {
         int databaseSizeBeforeTest = measurementDatasetRepository.findAll().size();
         // set the field null
-        measurementDataset.setStartLan(null);
+		measurementDataset.setStartLat(null);
 
         // Create the MeasurementDataset, which fails.
 
@@ -274,7 +289,7 @@ public class MeasurementDatasetResourceIntTest {
             .andExpect(jsonPath("$.[*].measurements").value(hasItem(DEFAULT_MEASUREMENTS.toString())))
             .andExpect(jsonPath("$.[*].storeId").value(hasItem(DEFAULT_STORE_ID.intValue())))
             .andExpect(jsonPath("$.[*].deviceIdentification").value(hasItem(DEFAULT_DEVICE_IDENTIFICATION.toString())))
-            .andExpect(jsonPath("$.[*].startLan").value(hasItem(DEFAULT_START_LAN.doubleValue())))
+				.andExpect(jsonPath("$.[*].startLat").value(hasItem(DEFAULT_START_LAT.doubleValue())))
             .andExpect(jsonPath("$.[*].startLon").value(hasItem(DEFAULT_START_LON.doubleValue())))
             .andExpect(jsonPath("$.[*].startAccuracy").value(hasItem(DEFAULT_START_ACCURACY.doubleValue())));
     }
@@ -293,7 +308,7 @@ public class MeasurementDatasetResourceIntTest {
             .andExpect(jsonPath("$.measurements").value(DEFAULT_MEASUREMENTS.toString()))
             .andExpect(jsonPath("$.storeId").value(DEFAULT_STORE_ID.intValue()))
             .andExpect(jsonPath("$.deviceIdentification").value(DEFAULT_DEVICE_IDENTIFICATION.toString()))
-            .andExpect(jsonPath("$.startLan").value(DEFAULT_START_LAN.doubleValue()))
+				.andExpect(jsonPath("$.startLat").value(DEFAULT_START_LAT.doubleValue()))
             .andExpect(jsonPath("$.startLon").value(DEFAULT_START_LON.doubleValue()))
             .andExpect(jsonPath("$.startAccuracy").value(DEFAULT_START_ACCURACY.doubleValue()));
     }
@@ -320,7 +335,7 @@ public class MeasurementDatasetResourceIntTest {
                 .measurements(UPDATED_MEASUREMENTS)
                 .storeId(UPDATED_STORE_ID)
                 .deviceIdentification(UPDATED_DEVICE_IDENTIFICATION)
-                .startLan(UPDATED_START_LAN)
+				.startLat(UPDATED_START_LAT)
                 .startLon(UPDATED_START_LON)
                 .startAccuracy(UPDATED_START_ACCURACY);
 
@@ -336,7 +351,7 @@ public class MeasurementDatasetResourceIntTest {
         assertThat(testMeasurementDataset.getMeasurements()).isEqualTo(UPDATED_MEASUREMENTS);
         assertThat(testMeasurementDataset.getStoreId()).isEqualTo(UPDATED_STORE_ID);
         assertThat(testMeasurementDataset.getDeviceIdentification()).isEqualTo(UPDATED_DEVICE_IDENTIFICATION);
-        assertThat(testMeasurementDataset.getStartLan()).isEqualTo(UPDATED_START_LAN);
+		assertThat(testMeasurementDataset.getStartLat()).isEqualTo(UPDATED_START_LAT);
         assertThat(testMeasurementDataset.getStartLon()).isEqualTo(UPDATED_START_LON);
         assertThat(testMeasurementDataset.getStartAccuracy()).isEqualTo(UPDATED_START_ACCURACY);
     }

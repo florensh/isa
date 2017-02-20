@@ -1,0 +1,39 @@
+= isa API
+
+
+[[_overview]]
+== Overview
+isa API documentation
+
+
+=== Version information
+[%hardbreaks]
+__Version__ : 0.0.1
+
+
+=== Contact information
+[%hardbreaks]
+__Contact__ : de.hshn.se
+__Contact Email__ : de.hshn.se@example.org
+
+
+=== URI scheme
+[%hardbreaks]
+__Host__ : localhost:8080
+__BasePath__ : /
+
+
+=== Tags
+
+* account-resource : Account Resource
+* measurement-dataset-resource : Measurement Dataset Resource
+* profile-info-resource : Profile Info Resource
+* store-map-resource : Store Map Resource
+* store-resource : Store Resource
+* user-resource : User Resource
+* visit-resource : Visit Resource
+* visitor-resource : Visitor Resource
+* waypoint-resource : Waypoint Resource
+
+
+

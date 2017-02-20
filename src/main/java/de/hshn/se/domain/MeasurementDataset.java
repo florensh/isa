@@ -1,12 +1,19 @@
 package de.hshn.se.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A MeasurementDataset.
@@ -36,8 +43,8 @@ public class MeasurementDataset implements Serializable {
     private String deviceIdentification;
 
     @NotNull
-    @Column(name = "start_lan", nullable = false)
-    private Double startLan;
+	@Column(name = "start_lat", nullable = false)
+	private Double startLat;
 
     @NotNull
     @Column(name = "start_lon", nullable = false)
@@ -94,17 +101,17 @@ public class MeasurementDataset implements Serializable {
         this.deviceIdentification = deviceIdentification;
     }
 
-    public Double getStartLan() {
-        return startLan;
+	public Double getStartLat() {
+		return startLat;
     }
 
-    public MeasurementDataset startLan(Double startLan) {
-        this.startLan = startLan;
+	public MeasurementDataset startLat(Double startLat) {
+		this.startLat = startLat;
         return this;
     }
 
-    public void setStartLan(Double startLan) {
-        this.startLan = startLan;
+	public void setStartLat(Double startLat) {
+		this.startLat = startLat;
     }
 
     public Double getStartLon() {
@@ -160,7 +167,7 @@ public class MeasurementDataset implements Serializable {
             ", measurements='" + measurements + "'" +
             ", storeId='" + storeId + "'" +
             ", deviceIdentification='" + deviceIdentification + "'" +
-            ", startLan='" + startLan + "'" +
+				", startLat='" + startLat + "'" +
             ", startLon='" + startLon + "'" +
             ", startAccuracy='" + startAccuracy + "'" +
             '}';

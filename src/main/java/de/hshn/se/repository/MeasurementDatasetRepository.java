@@ -1,10 +1,8 @@
 package de.hshn.se.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import de.hshn.se.domain.MeasurementDataset;
-
-import org.springframework.data.jpa.repository.*;
-
-import java.util.List;
 
 /**
  * Spring Data JPA repository for the MeasurementDataset entity.

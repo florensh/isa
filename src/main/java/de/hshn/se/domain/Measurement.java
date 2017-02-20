@@ -12,6 +12,10 @@ public class Measurement {
 	private Float magy;
 	private Float magz;
 
+	public Measurement() {
+
+	}
+
 	public Long getTimestamp() {
 		return timestamp;
 	}

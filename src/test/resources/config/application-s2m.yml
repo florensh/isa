@@ -1,0 +1,4 @@
+jhipster:
+    swagger:
+        contactName: de.hshn.se
+        contactEmail: de.hshn.se@example.org
