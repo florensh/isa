@@ -1,14 +1,31 @@
 package de.hshn.se.web.rest;
 
-import de.hshn.se.IsaApp;
+import static de.hshn.se.web.rest.TestUtil.sameInstant;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import de.hshn.se.domain.Visit;
-import de.hshn.se.domain.Store;
-import de.hshn.se.domain.Visitor;
-import de.hshn.se.repository.VisitRepository;
-import de.hshn.se.service.VisitService;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -16,25 +33,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.ZoneId;
-import java.util.List;
-
-import static de.hshn.se.web.rest.TestUtil.sameInstant;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import de.hshn.se.IsaApp;
+import de.hshn.se.domain.Store;
+import de.hshn.se.domain.Visit;
+import de.hshn.se.domain.Visitor;
+import de.hshn.se.repository.VisitRepository;
+import de.hshn.se.service.VisitService;
 
 /**
  * Test class for the VisitResource REST controller.
@@ -53,6 +64,9 @@ public class VisitResourceIntTest {
 
     @Inject
     private VisitService visitService;
+
+	@Rule
+	public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/docs/asciidoc/snippets");
 
     @Inject
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -74,7 +88,8 @@ public class VisitResourceIntTest {
         ReflectionTestUtils.setField(visitResource, "visitService", visitService);
         this.restVisitMockMvc = MockMvcBuilders.standaloneSetup(visitResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setMessageConverters(jacksonMessageConverter).build();
+				.setMessageConverters(jacksonMessageConverter).apply(documentationConfiguration(this.restDocumentation))
+				.build();
     }
 
     /**
@@ -169,6 +184,7 @@ public class VisitResourceIntTest {
 
         // Get all the visitList
         restVisitMockMvc.perform(get("/api/visits?sort=id,desc"))
+				.andDo(document("getAllVisitsUsingGET", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(visit.getId().intValue())))
@@ -183,6 +199,7 @@ public class VisitResourceIntTest {
 
         // Get the visit
         restVisitMockMvc.perform(get("/api/visits/{id}", visit.getId()))
+				.andDo(document("getVisitUsingGET", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(visit.getId().intValue()))

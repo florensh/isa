@@ -1,14 +1,19 @@
 package de.hshn.se.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Waypoint.
@@ -26,11 +31,11 @@ public class Waypoint implements Serializable {
 
     @NotNull
     @Column(name = "x", nullable = false)
-    private Float x;
+    private Double x;
 
     @NotNull
     @Column(name = "y", nullable = false)
-    private Float y;
+    private Double y;
 
     @NotNull
     @Column(name = "timestamp", nullable = false)
@@ -38,7 +43,7 @@ public class Waypoint implements Serializable {
 
     @ManyToOne
     @NotNull
-    @JsonIgnore
+	// @JsonIgnore
     private Visit visit;
 
     public Long getId() {
@@ -49,29 +54,29 @@ public class Waypoint implements Serializable {
         this.id = id;
     }
 
-    public Float getX() {
+    public Double getX() {
         return x;
     }
 
-    public Waypoint x(Float x) {
+    public Waypoint x(Double x) {
         this.x = x;
         return this;
     }
 
-    public void setX(Float x) {
+    public void setX(Double x) {
         this.x = x;
     }
 
-    public Float getY() {
+    public Double getY() {
         return y;
     }
 
-    public Waypoint y(Float y) {
+    public Waypoint y(Double y) {
         this.y = y;
         return this;
     }
 
-    public void setY(Float y) {
+    public void setY(Double y) {
         this.y = y;
     }
 

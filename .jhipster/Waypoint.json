@@ -14,14 +14,14 @@
     "fields": [
         {
             "fieldName": "x",
-            "fieldType": "Float",
+            "fieldType": "Double",
             "fieldValidateRules": [
                 "required"
             ]
         },
         {
             "fieldName": "y",
-            "fieldType": "Float",
+            "fieldType": "Double",
             "fieldValidateRules": [
                 "required"
             ]

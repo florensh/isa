@@ -3,6 +3,10 @@ package de.hshn.se.web.rest;
 import static de.hshn.se.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -21,6 +25,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -28,6 +33,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -73,6 +79,9 @@ public class StoreMapResourceIntTest {
     @Inject
     private EntityManager em;
 
+	@Rule
+	public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/docs/asciidoc/snippets");
+
     private MockMvc restStoreMapMockMvc;
 
     private StoreMap storeMap;
@@ -84,7 +93,8 @@ public class StoreMapResourceIntTest {
         ReflectionTestUtils.setField(storeMapResource, "storeMapService", storeMapService);
         this.restStoreMapMockMvc = MockMvcBuilders.standaloneSetup(storeMapResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setMessageConverters(jacksonMessageConverter).build();
+				.setMessageConverters(jacksonMessageConverter).apply(documentationConfiguration(this.restDocumentation))
+				.build();
     }
 
     /**
@@ -121,6 +131,7 @@ public class StoreMapResourceIntTest {
         restStoreMapMockMvc.perform(post("/api/store-maps")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(storeMap)))
+				.andDo(document("createStoreMapUsingPOST", preprocessResponse(prettyPrint())))
             .andExpect(status().isCreated());
 
         // Validate the StoreMap in the database
@@ -214,6 +225,7 @@ public class StoreMapResourceIntTest {
 
         // Get all the storeMapList
         restStoreMapMockMvc.perform(get("/api/store-maps?sort=id,desc"))
+				.andDo(document("getAllStoreMapsUsingGET", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(storeMap.getId().intValue())))
@@ -230,6 +242,7 @@ public class StoreMapResourceIntTest {
 
         // Get the storeMap
         restStoreMapMockMvc.perform(get("/api/store-maps/{id}", storeMap.getId()))
+				.andDo(document("getStoreMapUsingGET", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(storeMap.getId().intValue()))
@@ -264,6 +277,7 @@ public class StoreMapResourceIntTest {
         restStoreMapMockMvc.perform(put("/api/store-maps")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(updatedStoreMap)))
+				.andDo(document("updateStoreMapUsingPUT", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk());
 
         // Validate the StoreMap in the database
@@ -304,6 +318,7 @@ public class StoreMapResourceIntTest {
         // Get the storeMap
         restStoreMapMockMvc.perform(delete("/api/store-maps/{id}", storeMap.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andDo(document("deleteStoreMapUsingDELETE", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk());
 
         // Validate the database is empty

@@ -2,6 +2,10 @@ package de.hshn.se.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -16,6 +20,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -23,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,11 +49,11 @@ import de.hshn.se.service.StoreService;
 @SpringBootTest(classes = IsaApp.class)
 public class StoreResourceIntTest {
 
-	private static final String DEFAULT_NAME = "Hochschule Heilbronn Bibliothek";
-	private static final String UPDATED_NAME = "Hochschule Heilbronn Bibliothek";
+	private static final String DEFAULT_NAME = "HS Heilbronn Bibliothek";
+	private static final String UPDATED_NAME = "HS Heilbronn Bibliothek";
 
-	private static final String DEFAULT_STREET = "Max-Planck-Straße";
-	private static final String UPDATED_STREET = "Max-Planck-Straße";
+	private static final String DEFAULT_STREET = "Max-Planck-Str. 39";
+	private static final String UPDATED_STREET = "Max-Planck-Str. 38";
 
 	private static final String DEFAULT_CITY = "Heilbronn";
 	private static final String UPDATED_CITY = "Heilbronn";
@@ -58,14 +64,17 @@ public class StoreResourceIntTest {
 	private static final String DEFAULT_COUNTRY = "Deutschland";
 	private static final String UPDATED_COUNTRY = "Deutschland";
 
-	private static final Float DEFAULT_LAT = 49.123f;
-	private static final Float UPDATED_LAT = 49.123f;
+	private static final Double DEFAULT_LAT = 49.123113d;
+	private static final Double UPDATED_LAT = 49.123113d;
 
-	private static final Float DEFAULT_LON = 9.211f;
-	private static final Float UPDATED_LON = 9.211f;
+	private static final Double DEFAULT_LON = 9.211183d;
+	private static final Double UPDATED_LON = 9.211183d;
 
     @Inject
     private StoreRepository storeRepository;
+
+	@Rule
+	public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/docs/asciidoc/snippets");
 
     @Inject
     private StoreService storeService;
@@ -90,7 +99,8 @@ public class StoreResourceIntTest {
         ReflectionTestUtils.setField(storeResource, "storeService", storeService);
         this.restStoreMockMvc = MockMvcBuilders.standaloneSetup(storeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setMessageConverters(jacksonMessageConverter).build();
+				.setMessageConverters(jacksonMessageConverter).apply(documentationConfiguration(this.restDocumentation))
+				.build();
     }
 
     /**
@@ -126,6 +136,7 @@ public class StoreResourceIntTest {
         restStoreMockMvc.perform(post("/api/stores")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(store)))
+				.andDo(document("createStoreUsingPOST", preprocessResponse(prettyPrint())))
             .andExpect(status().isCreated());
 
         // Validate the Store in the database
@@ -295,6 +306,7 @@ public class StoreResourceIntTest {
 
         // Get all the storeList
         restStoreMockMvc.perform(get("/api/stores?sort=id,desc"))
+				.andDo(document("getAllStoresUsingGET", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(store.getId().intValue())))
@@ -315,6 +327,7 @@ public class StoreResourceIntTest {
 
         // Get the store
         restStoreMockMvc.perform(get("/api/stores/{id}", store.getId()))
+				.andDo(document("getStoreUsingGET", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(store.getId().intValue()))
@@ -357,6 +370,7 @@ public class StoreResourceIntTest {
         restStoreMockMvc.perform(put("/api/stores")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(updatedStore)))
+				.andDo(document("updateStoreUsingPUT", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk());
 
         // Validate the Store in the database
@@ -401,6 +415,7 @@ public class StoreResourceIntTest {
         // Get the store
         restStoreMockMvc.perform(delete("/api/stores/{id}", store.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
+				.andDo(document("deleteStoreUsingDELETE", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk());
 
         // Validate the database is empty

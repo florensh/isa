@@ -2,6 +2,10 @@ package de.hshn.se.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -16,6 +20,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -23,6 +28,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,17 +49,20 @@ import de.hshn.se.repository.WaypointRepository;
 @SpringBootTest(classes = IsaApp.class)
 public class WaypointResourceIntTest {
 
-	private static final Float DEFAULT_X = 1.25F;
-	private static final Float UPDATED_X = 2.83F;
+	private static final Double DEFAULT_X = 1.25D;
+	private static final Double UPDATED_X = 2.88D;
 
-	private static final Float DEFAULT_Y = 1.88F;
-	private static final Float UPDATED_Y = 2.73F;
+	private static final Double DEFAULT_Y = 1.44D;
+	private static final Double UPDATED_Y = 2.33D;
 
-	private static final Long DEFAULT_TIMESTAMP = System.currentTimeMillis();
-	private static final Long UPDATED_TIMESTAMP = System.currentTimeMillis() + 1;
+	private static final Long DEFAULT_TIMESTAMP = 1527907296l;
+	private static final Long UPDATED_TIMESTAMP = 1527907292l;
 
     @Inject
     private WaypointRepository waypointRepository;
+
+	@Rule
+	public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/docs/asciidoc/snippets");
 
     @Inject
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -75,7 +84,8 @@ public class WaypointResourceIntTest {
         ReflectionTestUtils.setField(waypointResource, "waypointRepository", waypointRepository);
         this.restWaypointMockMvc = MockMvcBuilders.standaloneSetup(waypointResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setMessageConverters(jacksonMessageConverter).build();
+				.setMessageConverters(jacksonMessageConverter).apply(documentationConfiguration(this.restDocumentation))
+				.build();
     }
 
     /**
@@ -102,8 +112,8 @@ public class WaypointResourceIntTest {
         waypoint = createEntity(em);
     }
 
-	// @Test
-	// @Transactional
+    @Test
+    @Transactional
     public void createWaypoint() throws Exception {
         int databaseSizeBeforeCreate = waypointRepository.findAll().size();
 
@@ -205,6 +215,7 @@ public class WaypointResourceIntTest {
 
         // Get all the waypointList
         restWaypointMockMvc.perform(get("/api/waypoints?sort=id,desc"))
+				.andDo(document("getAllWaypointsUsingGET", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(waypoint.getId().intValue())))
@@ -221,6 +232,7 @@ public class WaypointResourceIntTest {
 
         // Get the waypoint
         restWaypointMockMvc.perform(get("/api/waypoints/{id}", waypoint.getId()))
+				.andDo(document("getWaypointUsingGET", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(waypoint.getId().intValue()))
@@ -237,8 +249,8 @@ public class WaypointResourceIntTest {
             .andExpect(status().isNotFound());
     }
 
-	// @Test
-	// @Transactional
+    @Test
+    @Transactional
     public void updateWaypoint() throws Exception {
         // Initialize the database
         waypointRepository.saveAndFlush(waypoint);
@@ -265,8 +277,8 @@ public class WaypointResourceIntTest {
         assertThat(testWaypoint.getTimestamp()).isEqualTo(UPDATED_TIMESTAMP);
     }
 
-	// @Test
-	// @Transactional
+    @Test
+    @Transactional
     public void updateNonExistingWaypoint() throws Exception {
         int databaseSizeBeforeUpdate = waypointRepository.findAll().size();
 

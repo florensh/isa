@@ -2,10 +2,7 @@ package de.hshn.se.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -132,7 +129,8 @@ public class MeasurementDatasetResourceIntTest {
         restMeasurementDatasetMockMvc.perform(post("/api/measurement-datasets")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(measurementDataset)))
-				.andDo(document("createMeasurementDatasetUsingPOST", preprocessResponse(prettyPrint())))
+				// .andDo(document("createMeasurementDatasetUsingPOST",
+				// preprocessResponse(prettyPrint())))
             .andExpect(status().isCreated());
 
         // Validate the MeasurementDataset in the database
@@ -275,7 +273,7 @@ public class MeasurementDatasetResourceIntTest {
         assertThat(measurementDatasetList).hasSize(databaseSizeBeforeTest);
     }
 
-    @Test
+	@Test
     @Transactional
     public void getAllMeasurementDatasets() throws Exception {
         // Initialize the database
@@ -294,7 +292,7 @@ public class MeasurementDatasetResourceIntTest {
             .andExpect(jsonPath("$.[*].startAccuracy").value(hasItem(DEFAULT_START_ACCURACY.doubleValue())));
     }
 
-    @Test
+	@Test
     @Transactional
     public void getMeasurementDataset() throws Exception {
         // Initialize the database
@@ -313,7 +311,7 @@ public class MeasurementDatasetResourceIntTest {
             .andExpect(jsonPath("$.startAccuracy").value(DEFAULT_START_ACCURACY.doubleValue()));
     }
 
-    @Test
+	@Test
     @Transactional
     public void getNonExistingMeasurementDataset() throws Exception {
         // Get the measurementDataset
@@ -321,7 +319,7 @@ public class MeasurementDatasetResourceIntTest {
             .andExpect(status().isNotFound());
     }
 
-    @Test
+	@Test
     @Transactional
     public void updateMeasurementDataset() throws Exception {
         // Initialize the database
@@ -356,7 +354,7 @@ public class MeasurementDatasetResourceIntTest {
         assertThat(testMeasurementDataset.getStartAccuracy()).isEqualTo(UPDATED_START_ACCURACY);
     }
 
-    @Test
+	@Test
     @Transactional
     public void updateNonExistingMeasurementDataset() throws Exception {
         int databaseSizeBeforeUpdate = measurementDatasetRepository.findAll().size();
@@ -374,7 +372,7 @@ public class MeasurementDatasetResourceIntTest {
         assertThat(measurementDatasetList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
-    @Test
+	@Test
     @Transactional
     public void deleteMeasurementDataset() throws Exception {
         // Initialize the database

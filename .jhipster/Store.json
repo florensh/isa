@@ -39,14 +39,14 @@
         },
         {
             "fieldName": "lat",
-            "fieldType": "Float",
+            "fieldType": "Double",
             "fieldValidateRules": [
                 "required"
             ]
         },
         {
             "fieldName": "lon",
-            "fieldType": "Float",
+            "fieldType": "Double",
             "fieldValidateRules": [
                 "required"
             ]

@@ -1,13 +1,12 @@
 package de.hshn.se.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import de.hshn.se.domain.Visitor;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
-import de.hshn.se.repository.VisitorRepository;
-import de.hshn.se.web.rest.util.HeaderUtil;
-import de.hshn.se.web.rest.util.PaginationUtil;
+import javax.inject.Inject;
 
-import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -15,18 +14,29 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import com.codahale.metrics.annotation.Timed;
+
+import de.hshn.se.domain.Visitor;
+import de.hshn.se.repository.VisitorRepository;
+import de.hshn.se.web.rest.util.HeaderUtil;
+import de.hshn.se.web.rest.util.PaginationUtil;
+import io.swagger.annotations.ApiParam;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * REST controller for managing Visitor.
  */
 @RestController
+@ApiIgnore
 @RequestMapping("/api")
 public class VisitorResource {
 
@@ -43,6 +53,7 @@ public class VisitorResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/visitors")
+	@ApiIgnore
     @Timed
     public ResponseEntity<Visitor> createVisitor(@RequestBody Visitor visitor) throws URISyntaxException {
         log.debug("REST request to save Visitor : {}", visitor);
@@ -65,6 +76,7 @@ public class VisitorResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/visitors")
+	@ApiIgnore
     @Timed
     public ResponseEntity<Visitor> updateVisitor(@RequestBody Visitor visitor) throws URISyntaxException {
         log.debug("REST request to update Visitor : {}", visitor);
@@ -119,6 +131,7 @@ public class VisitorResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/visitors/{id}")
+	@ApiIgnore
     @Timed
     public ResponseEntity<Void> deleteVisitor(@PathVariable Long id) {
         log.debug("REST request to delete Visitor : {}", id);

@@ -44,11 +44,11 @@
                 <constraints nullable="false" />
             </column>
             
-            <column name="lat" type="${floatType}">
+            <column name="lat" type="double">
                 <constraints nullable="false" />
             </column>
             
-            <column name="lon" type="${floatType}">
+            <column name="lon" type="double">
                 <constraints nullable="false" />
             </column>
             

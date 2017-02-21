@@ -23,17 +23,5 @@ __Host__ : localhost:8080
 __BasePath__ : /
 
 
-=== Tags
-
-* account-resource : Account Resource
-* measurement-dataset-resource : Measurement Dataset Resource
-* profile-info-resource : Profile Info Resource
-* store-map-resource : Store Map Resource
-* store-resource : Store Resource
-* user-resource : User Resource
-* visit-resource : Visit Resource
-* visitor-resource : Visitor Resource
-* waypoint-resource : Waypoint Resource
-
 include::{generated}/paths.adoc[]
 include::{generated}/definitions.adoc[]

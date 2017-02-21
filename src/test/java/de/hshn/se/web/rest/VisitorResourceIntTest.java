@@ -1,11 +1,26 @@
 package de.hshn.se.web.rest;
 
-import de.hshn.se.IsaApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import de.hshn.se.domain.Visitor;
-import de.hshn.se.repository.VisitorRepository;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -13,20 +28,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.restdocs.JUnitRestDocumentation;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import de.hshn.se.IsaApp;
+import de.hshn.se.domain.Visitor;
+import de.hshn.se.repository.VisitorRepository;
 
 /**
  * Test class for the VisitorResource REST controller.
@@ -46,6 +57,9 @@ public class VisitorResourceIntTest {
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
+	@Rule
+	public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("target/docs/asciidoc/snippets");
+
     @Inject
     private EntityManager em;
 
@@ -60,7 +74,8 @@ public class VisitorResourceIntTest {
         ReflectionTestUtils.setField(visitorResource, "visitorRepository", visitorRepository);
         this.restVisitorMockMvc = MockMvcBuilders.standaloneSetup(visitorResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setMessageConverters(jacksonMessageConverter).build();
+				.setMessageConverters(jacksonMessageConverter).apply(documentationConfiguration(this.restDocumentation))
+				.build();
     }
 
     /**
@@ -125,6 +140,7 @@ public class VisitorResourceIntTest {
 
         // Get all the visitorList
         restVisitorMockMvc.perform(get("/api/visitors?sort=id,desc"))
+				.andDo(document("getAllVisitorsUsingGET", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(visitor.getId().intValue())));
@@ -138,6 +154,7 @@ public class VisitorResourceIntTest {
 
         // Get the visitor
         restVisitorMockMvc.perform(get("/api/visitors/{id}", visitor.getId()))
+				.andDo(document("getVisitorUsingGET", preprocessResponse(prettyPrint())))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(visitor.getId().intValue()));

@@ -51,8 +51,8 @@ public class TestDataLoader {
 		store.setZip("74206");
 		store.setCountry("Deutschland");
 		store.setStreet("Marktplatz 9");
-		store.setLat(49.23055156f);
-		store.setLon(9.16217502f);
+		store.setLat(49.23055156d);
+		store.setLon(9.16217502d);
 
 		store = this.storeRepository.save(store);
 
@@ -67,16 +67,16 @@ public class TestDataLoader {
 
 		Set<Waypoint> waypoints = new HashSet<Waypoint>();
 		Waypoint wp1 = new Waypoint();
-		wp1.setX(480.0f);
-		wp1.setY(50.0f);
+		wp1.setX(480.0d);
+		wp1.setY(50.0d);
 		wp1.setVisit(visit);
 		wp1.setTimestamp(0l);
 		waypoints.add(this.waypointRepository.save(wp1));
 		
 		
 		Waypoint wp2 = new Waypoint();
-		wp2.setX(480.0f);
-		wp2.setY(200.0f);
+		wp2.setX(480.0d);
+		wp2.setY(200.0d);
 		wp2.setVisit(visit);
 		wp2.setTimestamp(1000l);
 		waypoints.add(this.waypointRepository.save(wp2));

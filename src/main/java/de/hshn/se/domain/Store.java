@@ -44,11 +44,11 @@ public class Store implements Serializable {
 
     @NotNull
     @Column(name = "lat", nullable = false)
-    private Float lat;
+    private Double lat;
 
     @NotNull
     @Column(name = "lon", nullable = false)
-    private Float lon;
+    private Double lon;
 
     public Long getId() {
         return id;
@@ -123,29 +123,29 @@ public class Store implements Serializable {
         this.country = country;
     }
 
-    public Float getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public Store lat(Float lat) {
+    public Store lat(Double lat) {
         this.lat = lat;
         return this;
     }
 
-    public void setLat(Float lat) {
+    public void setLat(Double lat) {
         this.lat = lat;
     }
 
-    public Float getLon() {
+    public Double getLon() {
         return lon;
     }
 
-    public Store lon(Float lon) {
+    public Store lon(Double lon) {
         this.lon = lon;
         return this;
     }
 
-    public void setLon(Float lon) {
+    public void setLon(Double lon) {
         this.lon = lon;
     }
 
