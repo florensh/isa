@@ -22,6 +22,11 @@
                     <th jh-sort-by="validityStart"><span>Validity Start</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="validityEnd"><span>Validity End</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="url"><span>Url</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="wallMap"><span>Wall Map</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="pathMap"><span>Path Map</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="dimensionX"><span>Dimension X</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="dimensionY"><span>Dimension Y</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="scale"><span>Scale</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="store.name"><span>Store</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
@@ -32,6 +37,11 @@
                     <td>{{storeMap.validityStart | date:'medium'}}</td>
                     <td>{{storeMap.validityEnd | date:'medium'}}</td>
                     <td>{{storeMap.url}}</td>
+                    <td>{{storeMap.wallMap}}</td>
+                    <td>{{storeMap.pathMap}}</td>
+                    <td>{{storeMap.dimensionX}}</td>
+                    <td>{{storeMap.dimensionY}}</td>
+                    <td>{{storeMap.scale}}</td>
                     <td>
                         <a ui-sref="store-detail({id:storeMap.store.id})">{{storeMap.store.name}}</a>
                     </td>

@@ -39,7 +39,7 @@ public class MeasurementDatasetServiceImpl implements MeasurementDatasetService{
 	public MeasurementDataset save(MeasurementDataset measurementDataset) {
 		log.info("Request to save MeasurementDataset : {}", measurementDataset);
         MeasurementDataset result = measurementDatasetRepository.save(measurementDataset);
-		// visitService.create(result);
+		visitService.create(result);
         return result;
     }
 

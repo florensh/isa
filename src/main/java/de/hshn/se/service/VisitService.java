@@ -1,5 +1,7 @@
 package de.hshn.se.service;
 
+import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -97,23 +99,30 @@ public class VisitService {
     }
 
 	public void create(MeasurementDataset measurementSet) {
-
+		log.info("Creating new visit");
 		Visit visit = new Visit();
 		Store store = this.storeRepository.findOne(measurementSet.getStoreId());
 
-		StoreMap map = this.storeMapRepository.findByStoreIdAndValidityStartBeforeAndValidityEndAfter(store.getId(),
-				null, null);
+		StoreMap map = this.storeMapRepository.findByStoreId(store.getId());
+		map.setWallMap(map.getWallMap());
+		map.setPathMap(map.getPathMap());
 
 		Visitor visitor = new Visitor();
 		visitor = this.visitorRepository.save(visitor);
 
 		visit.setVisitor(visitor);
 		visit.setStore(store);
-
-		Set<Waypoint> waypoints = PathGenerator.bpf(2000, measurementSet, store, map);
-		if (waypoints != null && waypoints.isEmpty()) {
-			visit.setWaypoints(waypoints);
-			this.waypointRepository.save(waypoints);
+		visit.setDateOfVisit(ZonedDateTime.now());
+		Set<Waypoint> storedWaypoints = new HashSet<Waypoint>();
+		Set<Waypoint> waypoints = PathGenerator.bpf(8000, measurementSet, store, map);
+		visit = this.visitRepository.save(visit);
+		for (Waypoint w : waypoints) {
+			w.setVisit(visit);
+			storedWaypoints.add(this.waypointRepository.save(w));
+		}
+		if (storedWaypoints != null && !storedWaypoints.isEmpty()) {
+			visit.setWaypoints(storedWaypoints);
+			this.visitRepository.save(visit);
 		}
 
 	}

@@ -67,7 +67,7 @@ class StoreMapGatlingTest extends Simulation {
             .exec(http("Create new storeMap")
             .post("/api/store-maps")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "validityStart":"2020-01-01T00:00:00.000Z", "validityEnd":"2020-01-01T00:00:00.000Z", "url":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "validityStart":"2020-01-01T00:00:00.000Z", "validityEnd":"2020-01-01T00:00:00.000Z", "url":"SAMPLE_TEXT", "wallMap":null, "pathMap":null, "dimensionX":null, "dimensionY":null, "scale":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_storeMap_url"))).exitHereIfFailed
             .pause(10)

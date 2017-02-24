@@ -65,6 +65,76 @@
                 </p>
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label" for="field_wallMap">Wall Map</label>
+                <textarea class="form-control" name="wallMap" id="field_wallMap"
+                    ng-model="vm.storeMap.wallMap" required ></textarea>
+            <div ng-show="editForm.wallMap.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.wallMap.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_pathMap">Path Map</label>
+                <textarea class="form-control" name="pathMap" id="field_pathMap"
+                    ng-model="vm.storeMap.pathMap" required ></textarea>
+            <div ng-show="editForm.pathMap.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.pathMap.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_dimensionX">Dimension X</label>
+            <input type="number" class="form-control" name="dimensionX" id="field_dimensionX"
+                    ng-model="vm.storeMap.dimensionX"
+                    required />
+            <div ng-show="editForm.dimensionX.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.dimensionX.$error.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.dimensionX.$error.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_dimensionY">Dimension Y</label>
+            <input type="number" class="form-control" name="dimensionY" id="field_dimensionY"
+                    ng-model="vm.storeMap.dimensionY"
+                    required />
+            <div ng-show="editForm.dimensionY.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.dimensionY.$error.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.dimensionY.$error.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_scale">Scale</label>
+            <input type="number" class="form-control" name="scale" id="field_scale"
+                    ng-model="vm.storeMap.scale"
+                    required />
+            <div ng-show="editForm.scale.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.scale.$error.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.scale.$error.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
 
         <div class="form-group">
             <label for="field_store">Store</label>

@@ -118,6 +118,11 @@
                                 validityStart: null,
                                 validityEnd: null,
                                 url: null,
+                                wallMap: null,
+                                pathMap: null,
+                                dimensionX: null,
+                                dimensionY: null,
+                                scale: null,
                                 id: null
                             };
                         }

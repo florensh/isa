@@ -5,16 +5,16 @@
         .module('isaApp')
         .controller('VisitController', VisitController);
 
-    VisitController.$inject = ['$scope', '$state', 'Visit', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams', 'leafletData', 'leafletBoundsHelpers', '_'];
+    VisitController.$inject = ['$scope', '$filter', '$state', 'Visit', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams', 'leafletData', 'leafletBoundsHelpers', '_'];
 
-    function VisitController($scope, $state, Visit, ParseLinks, AlertService, paginationConstants, pagingParams, leafletData, leafletBoundsHelpers) {
+    function VisitController($scope, $filter, $state, Visit, ParseLinks, AlertService, paginationConstants, pagingParams, leafletData, leafletBoundsHelpers) {
 
         var vm = this;
 
 
         var maxBounds = leafletBoundsHelpers.createBoundsFromArray([
             [0, 0],
-            [736, 501]
+            [619, 421]
         ]);
         angular.extend($scope, {
             defaults: {
@@ -34,10 +34,10 @@
                     sanfrancisco: {
                         name: 'Supermarket',
                         type: 'imageOverlay',
-                        url: 'content/images/bib_4.png',
+                        url: 'content/images/bibWalls.svg',
                         bounds: [
                             [0, 0],
-                            [736, 501]
+                            [619, 421]
                         ],
                         layerParams: {
                             showOnSelector: false,
@@ -47,43 +47,43 @@
                     }
                 },
             },
-            // paths: [],
-            paths: {
-              p1: {
-                  color: 'blue',
-                  weight: 10,
-                  // stroke: true,
-                  dashArray: "15, 2",
-                  opacity: 0.1,
-                  lineCap: "butt",
-                  // lineJoin: "bevel",
-                  latlngs: [
-                      { lat: 50, lng: 480 },
-                      { lat: 200, lng: 480 },
-                      { lat: 200, lng: 300 },
-                      { lat: 150, lng: 200 }
-                  ],
-                  message: "<h4>Path 1<br><small>23min</small></h4>",
-              }
-            },
-            markers: [
-              // {
-              //       "lat": 150,
-              //       "lng": 200,
-              //       "message": "staying for <strong>5s</strong>"
-              //   },
-                {
-                        "lat": 150,
-                        "lng": 210,
-                        "message": "staying for <strong>5s</strong>",
-                        "icon": {
-                            "type": 'awesomeMarker',
-                            "icon": 'hourglass',
-                            "markerColor": 'blue'
-                        }
-                    }
-
-            ]
+            paths: [],
+            // paths: {
+            //   p1: {
+            //       color: 'blue',
+            //       weight: 6,
+            //       // stroke: true,
+            //       dashArray: "8, 3",
+            //       opacity: 0.2,
+            //       lineCap: "butt",
+            //       // lineJoin: "bevel",
+            //       latlngs: [
+            //           { lat: 7.121740206626825*(501/25.0805), lng: 22.822013488580314*(501/25.0805) },
+            //           { lat: 11.380675488673868*(501/25.0805), lng: 15.395472337919532*(501/25.0805) },
+            //           { lat: 18.358690730650693*(501/25.0805), lng: 10.621956482328699*(501/25.0805) }
+            //       ],
+            //       message: "<h4>Path 1<br><small>23min</small></h4>",
+            //   }
+            // },
+            markers: []
+                // markers: [
+                //     // {
+                //     //       "lat": 150,
+                //     //       "lng": 200,
+                //     //       "message": "staying for <strong>5s</strong>"
+                //     //   },
+                //     {
+                //         "lat": 150,
+                //         "lng": 210,
+                //         "message": "staying for <strong>5s</strong>",
+                //         "icon": {
+                //             "type": 'awesomeMarker',
+                //             "icon": 'hourglass',
+                //             "markerColor": 'blue'
+                //         }
+                //     }
+                //
+                // ]
         });
 
 
@@ -99,23 +99,40 @@
             ids: {}
         }
 
+        function createMarker(visit) {
+            var start = _.chain(visit.waypoints).orderBy(['timestamp'], ['asc']).head().value()
+            var end = _.chain(visit.waypoints).orderBy(['timestamp'], ['asc']).last().value()
+
+            return [{
+                "lat": start.y * 16.7859492434,
+                "lng": start.x * 16.7859492434,
+                "message": "Start"
+            }, {
+                "lat": end.y * 16.7859492434,
+                "lng": end.x * 16.7859492434,
+                "message": "End"
+            }]
+
+
+        }
+
         function createPath(visit) {
             return {
                 name: visit.id,
                 color: 'blue',
-                weight: 10,
+                weight: 4,
                 // stroke: true,
-                dashArray: "15, 2",
+                dashArray: "5, 2",
                 opacity: 0.4,
                 lineCap: "butt",
                 // lineJoin: "bevel",
-                latlngs: _.map(visit.waypoints, function(wp) {
+                latlngs: _.chain(visit.waypoints).orderBy(['timestamp'], ['asc']).map(function(wp) {
                     return {
-                        lat: wp.y,
-                        lng: wp.x
+                        lat: wp.y * 16.7859492434,
+                        lng: wp.x * 16.7859492434
                     }
-                }),
-                message: "<h4>Path 1<br><small>23min</small></h4>",
+                }).value(),
+                message: "<h4>Path " + visit.id + "<br><small>" + visit.duration + " min</small></h4>",
             }
         }
 
@@ -127,6 +144,16 @@
                 }).map(createPath)
                 .keyBy('name')
                 .value()
+
+            $scope.markers =
+                _.chain(vm.visits)
+                .filter(function(v) {
+                    return _.get(vm.activePaths.ids, v.id);
+                }).map(createMarker)
+                .flattenDeep()
+                .value()
+
+
 
         }
 
@@ -155,7 +182,17 @@
                 vm.links = ParseLinks.parse(headers('link'));
                 vm.totalItems = headers('X-Total-Count');
                 vm.queryCount = vm.totalItems;
-                vm.visits = data;
+                var visitsWithDuration = _.chain(data).map(function(v) {
+                    var start = _.chain(v.waypoints).orderBy(['timestamp'], ['asc']).head().value()
+                    var end = _.chain(v.waypoints).orderBy(['timestamp'], ['asc']).last().value()
+                    var duration = (end.timestamp / 1000 - start.timestamp / 1000) / 60
+                    return _.defaults(v, {
+                        'duration': $filter('number')(duration, 2)
+                    })
+                }).value()
+
+
+                vm.visits = visitsWithDuration;
                 vm.page = pagingParams.page;
             }
 

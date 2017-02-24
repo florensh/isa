@@ -15,6 +15,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * A Waypoint.
  */
@@ -43,7 +45,7 @@ public class Waypoint implements Serializable {
 
     @ManyToOne
     @NotNull
-	// @JsonIgnore
+	@JsonIgnore
     private Visit visit;
 
     public Long getId() {

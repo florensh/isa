@@ -36,6 +36,26 @@
                 <constraints nullable="false" />
             </column>
             
+            <column name="wall_map" type="clob">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="path_map" type="clob">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="dimension_x" type="double">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="dimension_y" type="double">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="scale" type="double">
+                <constraints nullable="false" />
+            </column>
+            
             <column name="store_id" type="bigint">
                 <constraints nullable="false" />
             </column>

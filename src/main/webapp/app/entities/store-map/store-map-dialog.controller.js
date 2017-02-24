@@ -5,15 +5,17 @@
         .module('isaApp')
         .controller('StoreMapDialogController', StoreMapDialogController);
 
-    StoreMapDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'StoreMap', 'Store'];
+    StoreMapDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'DataUtils', 'entity', 'StoreMap', 'Store'];
 
-    function StoreMapDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, StoreMap, Store) {
+    function StoreMapDialogController ($timeout, $scope, $stateParams, $uibModalInstance, DataUtils, entity, StoreMap, Store) {
         var vm = this;
 
         vm.storeMap = entity;
         vm.clear = clear;
         vm.datePickerOpenStatus = {};
         vm.openCalendar = openCalendar;
+        vm.byteSize = DataUtils.byteSize;
+        vm.openFile = DataUtils.openFile;
         vm.save = save;
         vm.stores = Store.query();
 

@@ -12,4 +12,9 @@ public class Particle {
 		this.ori = ori;
 	}
 
+	@Override
+	public String toString() {
+		return "Particle [x=" + x + ", y=" + y + ", ori=" + ori + "]";
+	}
+
 }

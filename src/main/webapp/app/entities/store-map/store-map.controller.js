@@ -5,9 +5,9 @@
         .module('isaApp')
         .controller('StoreMapController', StoreMapController);
 
-    StoreMapController.$inject = ['$scope', '$state', 'StoreMap', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams'];
+    StoreMapController.$inject = ['$scope', '$state', 'DataUtils', 'StoreMap', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams'];
 
-    function StoreMapController ($scope, $state, StoreMap, ParseLinks, AlertService, paginationConstants, pagingParams) {
+    function StoreMapController ($scope, $state, DataUtils, StoreMap, ParseLinks, AlertService, paginationConstants, pagingParams) {
         var vm = this;
 
         vm.loadPage = loadPage;
@@ -15,6 +15,8 @@
         vm.reverse = pagingParams.ascending;
         vm.transition = transition;
         vm.itemsPerPage = paginationConstants.itemsPerPage;
+        vm.openFile = DataUtils.openFile;
+        vm.byteSize = DataUtils.byteSize;
 
         loadAll();
 
