@@ -17,6 +17,18 @@
         vm.predicate = 'id';
         vm.reverse = true;
 
+        $scope.radioModel = 'Morning';
+
+        $scope.$watchCollection('radioModel', function() {
+            $scope.loadHeatMap()
+        })
+
+        $scope.loadHeatMap = function() {
+            $scope.layers.overlays.heat.data = vm.data
+            $scope.layers.overlays.heat.doRefresh = true;
+        }
+
+
         vm.data = [
             // [7 * (619 / 36.9224), 22 * (619 / 36.9224), 0.2],
             // [440, 440, 0.2],
@@ -63,7 +75,9 @@
                         data: vm.data,
                         layerOptions: {
                             radius: 15,
-                            blur: 10
+                            blur: 10,
+                            max: 2.0,
+                            maxZoom: 1
                         },
                         layerParams: {
                             showOnSelector: false
@@ -106,14 +120,14 @@
                 // }).value())
 
 
-                _.forEach(vm.waypoints, function(w){
-                  vm.data.push([w.y* 16.7859492434, w.x* 16.7859492434, 0.2])
+                _.forEach(vm.waypoints, function(w) {
+                    vm.data.push([w.y * 16.7859492434, w.x * 16.7859492434, 0.1])
                 })
 
-                $scope.layers.overlays.heat.data = vm.data
-                console.log($scope.layers.overlays.heat.data)
-                $scope.layers.overlays.heat.doRefresh = true;
-                console.log($scope.layers.overlays.heat.data)
+                // $scope.layers.overlays.heat.data = vm.data
+                // console.log($scope.layers.overlays.heat.data)
+                // $scope.layers.overlays.heat.doRefresh = true;
+                // console.log($scope.layers.overlays.heat.data)
 
 
             }

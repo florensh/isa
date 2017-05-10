@@ -184,6 +184,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+<!-- https://mvnrepository.com/artifact/org.osgeo/proj4j -->
+<dependency>
+    <groupId>org.osgeo</groupId>
+    <artifactId>proj4j</artifactId>
+    <version>0.1.0</version>
+</dependency>
 
         <dependency>
             <groupId>commons-io</groupId>

@@ -22,7 +22,7 @@ import de.hshn.se.domain.Waypoint;
 
 public class PathGenerator {
 
-	private static final double l_N = 0.1;
+	private static final double l_N = 0.5;
 	private static final double d_N = 0.1;
 	private static final double R_ortho = 1d;
 	private static final Logger log = LoggerFactory.getLogger(PathGenerator.class);
@@ -36,13 +36,13 @@ public class PathGenerator {
 
 		int numSteps = measurements.size();
 		Waypoint[] waypoints = new Waypoint[numSteps];
-		waypoints[0] = calculateStartPosition(measurementSet.getStartLat(), measurementSet.getStartLon());
+		waypoints[0] = calculateStartPosition(measurementSet.getStartLat(), measurementSet.getStartLon(), map);
 
 		// hack! startpunkt hat keinen zeitstempel
 		waypoints[0].setTimestamp(measurements.get(0).getTimestamp() - 500);
 
 		Particle[][] particles = new Particle[numParciles][numSteps];
-		Particle[] initP = createInitialParticles(numParciles, waypoints[0], 2f, map);
+		Particle[] initP = createInitialParticles(numParciles, waypoints[0], measurementSet.getStartAccuracy(), map);
 		traceParticle(initP);
 
 		for (int i = 0; i < numParciles; i++) {
@@ -58,9 +58,8 @@ public class PathGenerator {
 			waypoint.setTimestamp(m.getTimestamp());
 			waypoints[k] = waypoint;
 
-
 			for (int i = 0; i < numParciles; i++) {
-				
+
 				// calculate noise for direction and distance
 				double dNoise = r.nextGaussian() * Math.sqrt(d_N);
 				double lNoise = r.nextGaussian() * Math.sqrt(l_N);
@@ -68,30 +67,16 @@ public class PathGenerator {
 
 				double direction = m.getDirection() + dNoise + deltaOri;
 				double distance = m.getLength() + lNoise;
-				/*
-				 * double testX = 1d; double testY = 1d;
-				 * 
-				 * double testXDir = Math.cos(2 * Math.PI); double testYDir =
-				 * Math.sin(2 * Math.PI);
-				 * 
-				 * double testResX = testX + 1d * testXDir; double testResY =
-				 * testY + 1d * testYDir;
-				 */
 
 				// dead reckoning
 				double new_x = particles[i][k - 1].x + distance * Math.sin(direction);
 				double new_y = particles[i][k - 1].y + distance * Math.cos(direction);
 
-
-
 				particles[i][k] = new Particle(new_x, new_y, deltaOri);
-
 
 				// map matching
 				boolean validPath = map.isValidPath(particles[i][k - 1].x, particles[i][k - 1].y, particles[i][k].x,
 						particles[i][k].y);
-
-
 
 				double distanceToPath = map.distanceToPath(particles[i][k - 1].x, particles[i][k - 1].y,
 						particles[i][k].x, particles[i][k].y);
@@ -104,9 +89,6 @@ public class PathGenerator {
 
 			}
 
-
-
-
 			// normalize
 			double[] weights_temp = new double[numParciles];
 			double sum = DoubleStream.of(weights).sum();
@@ -114,7 +96,6 @@ public class PathGenerator {
 				weights_temp[i] = weights[i] / sum;
 			}
 			weights = weights_temp;
-
 
 			// resample
 			Particle[][] particles_temp = new Particle[numParciles][numSteps];
@@ -129,7 +110,7 @@ public class PathGenerator {
 
 			for (int i = 0; i < numParciles; i++) {
 				double rand = Math.random();
-				
+
 				for (int j = 0; j < numParciles; j++) {
 					if (j == 0) {
 						if (rand < cumsum[j]) {
@@ -163,8 +144,6 @@ public class PathGenerator {
 				traceParticle(particles_trace);
 			}
 
-
-
 		}
 
 		// estimate state and do backtracking
@@ -180,12 +159,9 @@ public class PathGenerator {
 			waypoints[k].x(x).y(y);
 		}
 
-
-
 		log.info("Done path creation");
 		return new HashSet<Waypoint>(Arrays.asList(waypoints));
 	}
-
 
 	private static Particle[] createInitialParticles(int numParciles, Waypoint start, Float accuracy, StoreMap map) {
 		Random r = new Random();
@@ -207,12 +183,10 @@ public class PathGenerator {
 		Double x;
 		Double y;
 
-
 		do {
 			x = start.getX() + accuracy * r.nextGaussian();
 			y = start.getY() + accuracy * r.nextGaussian();
 		} while (!map.isValidPointByPixel(x, y));
-
 
 		return new Particle(x, y, ori);
 
@@ -222,9 +196,8 @@ public class PathGenerator {
 		List<Measurement> measurements = null;
 		try {
 			ObjectMapper mapper = new ObjectMapper();
-			measurements = mapper.readValue(measurementsAsString,
-					new TypeReference<List<Measurement>>() {
-					});
+			measurements = mapper.readValue(measurementsAsString, new TypeReference<List<Measurement>>() {
+			});
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -236,9 +209,13 @@ public class PathGenerator {
 		return measurements;
 	}
 
-	private static Waypoint calculateStartPosition(Double startLat, Double startLon) {
+	private static Waypoint calculateStartPosition(Double startLat, Double startLon, StoreMap map) {
 		Waypoint start = new Waypoint();
-		start.setX(22d);
+		// double[] point = map.geodetic2Ned(startLat, startLon);
+		// start.setX(point[0]);
+		// start.setY(point[1]);
+
+		start.setX(20d);
 		start.setY(7d);
 		return start;
 	}
@@ -256,7 +233,6 @@ public class PathGenerator {
 			}
 			sb.append("]");
 			System.out.println(sb.toString());
-
 
 		}
 	}

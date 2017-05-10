@@ -23,25 +23,8 @@
       "gatling"
     ],
     "jhiPrefix": "jhi",
-    "otherModules": [
-      {
-        "name": "generator-jhipster-nav-element",
-        "version": "0.0.5"
-      },
-      {
-        "name": "generator-jhipster-angular-ui",
-        "version": "0.0.2"
-      },
-      {
-        "name": "generator-jhipster-leaflet",
-        "version": "1.0.0"
-      },
-      {
-        "name": "generator-jhipster-swagger2markup",
-        "version": "1.1.0"
-      }
-    ],
     "enableTranslation": false,
-    "herokuAppName": "calm-coast-80282"
+    "herokuAppName": "calm-coast-80282",
+    "serviceDiscoveryType": false
   }
 }

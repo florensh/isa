@@ -7,10 +7,11 @@
 
     VisitController.$inject = ['$scope', '$filter', '$state', 'Visit', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams', 'leafletData', 'leafletBoundsHelpers', '_'];
 
-    function VisitController($scope, $filter, $state, Visit, ParseLinks, AlertService, paginationConstants, pagingParams, leafletData, leafletBoundsHelpers) {
+    function VisitController($scope, $filter, $state, Visit, ParseLinks, AlertService, paginationConstants, pagingParams, leafletData, leafletBoundsHelpers, uibDateParser) {
 
         var vm = this;
-
+        $scope.format = 'yyyy/MM/dd';
+        $scope.date = new Date();
 
         var maxBounds = leafletBoundsHelpers.createBoundsFromArray([
             [0, 0],
@@ -103,15 +104,48 @@
             var start = _.chain(visit.waypoints).orderBy(['timestamp'], ['asc']).head().value()
             var end = _.chain(visit.waypoints).orderBy(['timestamp'], ['asc']).last().value()
 
-            return [{
+            var startEnd = [{
                 "lat": start.y * 16.7859492434,
                 "lng": start.x * 16.7859492434,
-                "message": "Start"
+                "message": "Start",
+                "icon": {
+                    "type": 'awesomeMarker',
+                    "icon": 'record',
+                    "markerColor": 'blue'
+                }
             }, {
                 "lat": end.y * 16.7859492434,
                 "lng": end.x * 16.7859492434,
-                "message": "End"
+                "message": "End",
+                "icon": {
+                    "type": 'awesomeMarker',
+                    "icon": 'log-out',
+                    "markerColor": 'blue'
+                }
             }]
+
+            var wpArray = _.orderBy(visit.waypoints, ['timestamp'], ['asc'])
+
+            var staying = []
+            for (var i = 1; i < wpArray.length - 1; i++) {
+                var wp1 = wpArray[i]
+                var wp2 = wpArray[i + 1]
+                if (wp2.timestamp - wp1.timestamp > 5000) {
+                    var sec = (wp2.timestamp - wp1.timestamp) / 1000
+                    staying.push({
+                        "lat": wp1.y * 16.7859492434,
+                        "lng": wp1.x * 16.7859492434,
+                        "message": "<h5>Staying<br><small>" + $filter('number')(sec, 0) + " seconds</small></h5>",
+                        "icon": {
+                            "type": 'awesomeMarker',
+                            "icon": 'hourglass',
+                            "markerColor": 'purple'
+                        }
+                    })
+                }
+            }
+
+            return _.concat(startEnd, staying)
 
 
         }
@@ -132,7 +166,7 @@
                         lng: wp.x * 16.7859492434
                     }
                 }).value(),
-                message: "<h4>Path " + visit.id + "<br><small>" + visit.duration + " min</small></h4>",
+                message: "<h4>Path " + visit.id + "<br><small>" + visit.duration + "</small></h4>",
             }
         }
 
@@ -186,8 +220,9 @@
                     var start = _.chain(v.waypoints).orderBy(['timestamp'], ['asc']).head().value()
                     var end = _.chain(v.waypoints).orderBy(['timestamp'], ['asc']).last().value()
                     var duration = (end.timestamp / 1000 - start.timestamp / 1000) / 60
+                    var sec = $filter('number')((end.timestamp / 1000 - start.timestamp / 1000) % 60, 0)
                     return _.defaults(v, {
-                        'duration': $filter('number')(duration, 2)
+                        'duration': $filter('number')(duration, 0) + ' min ' + sec + ' sec'
                     })
                 }).value()
 

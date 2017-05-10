@@ -114,7 +114,7 @@ public class VisitService {
 		visit.setStore(store);
 		visit.setDateOfVisit(ZonedDateTime.now());
 		Set<Waypoint> storedWaypoints = new HashSet<Waypoint>();
-		Set<Waypoint> waypoints = PathGenerator.bpf(8000, measurementSet, store, map);
+		Set<Waypoint> waypoints = PathGenerator.bpf(10000, measurementSet, store, map);
 		visit = this.visitRepository.save(visit);
 		for (Waypoint w : waypoints) {
 			w.setVisit(visit);

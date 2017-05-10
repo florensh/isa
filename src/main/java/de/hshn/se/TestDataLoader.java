@@ -88,6 +88,13 @@ public class TestDataLoader {
 		wp2.setTimestamp(1000 * 10l);
 		waypoints.add(this.waypointRepository.save(wp2));
 
+		Waypoint wp3 = new Waypoint();
+		wp3.setX(13.0d);
+		wp3.setY(9.0d);
+		wp3.setVisit(visit);
+		wp3.setTimestamp(1000 * 70l);
+		waypoints.add(this.waypointRepository.save(wp3));
+
 		visit.setWaypoints(waypoints);
 		this.visitRepository.save(visit);
 

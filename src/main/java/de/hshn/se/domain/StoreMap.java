@@ -52,49 +52,83 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class StoreMap implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	// hack!!! muss alles in die API
+	@JsonIgnore
+	@Transient
+	private final double lat0 = 49.122926;
 
-    @NotNull
-    @Column(name = "validity_start", nullable = false)
-    private ZonedDateTime validityStart;
+	@JsonIgnore
+	@Transient
+	private final double lat1 = 49.123283;
 
-    @NotNull
-    @Column(name = "validity_end", nullable = false)
-    private ZonedDateTime validityEnd;
+	@JsonIgnore
+	@Transient
+	private final double lon0 = 9.211009;
 
-    @NotNull
-    @Column(name = "url", nullable = false)
-    private String url;
+	@JsonIgnore
+	@Transient
+	private final double lon1 = 9.211307;
 
-    @NotNull
-    @Lob
-    @Column(name = "wall_map", nullable = false)
-    private String wallMap;
+	public double[] geodetic2Ned(double lat, double lon) {
+		double delta_lon = lon1 - lon0;
+		double delta_lat = lat1 - lat0;
 
-    @NotNull
-    @Lob
-    @Column(name = "path_map", nullable = false)
-    private String pathMap;
+		double delta_x = 25.0805;
+		double delta_y = 36.9224;
 
-    @NotNull
-    @Column(name = "dimension_x", nullable = false)
-    private Double dimensionX;
+		double vertical_scale = delta_y / delta_lat;
+		double horizontal_scale = delta_x / delta_lon;
 
-    @NotNull
-    @Column(name = "dimension_y", nullable = false)
-    private Double dimensionY;
+		double y = (lat - lat0) * vertical_scale;
+		double x = (lon - lon0) * horizontal_scale;
+		double[] ret = { x, y };
+		return ret;
 
-    @NotNull
-    @Column(name = "scale", nullable = false)
-    private Double scale;
+	}
 
-    @ManyToOne
-    @NotNull
-    private Store store;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+
+	@NotNull
+	@Column(name = "validity_start", nullable = false)
+	private ZonedDateTime validityStart;
+
+	@NotNull
+	@Column(name = "validity_end", nullable = false)
+	private ZonedDateTime validityEnd;
+
+	@NotNull
+	@Column(name = "url", nullable = false)
+	private String url;
+
+	@NotNull
+	@Lob
+	@Column(name = "wall_map", nullable = false)
+	private String wallMap;
+
+	@NotNull
+	@Lob
+	@Column(name = "path_map", nullable = false)
+	private String pathMap;
+
+	@NotNull
+	@Column(name = "dimension_x", nullable = false)
+	private Double dimensionX;
+
+	@NotNull
+	@Column(name = "dimension_y", nullable = false)
+	private Double dimensionY;
+
+	@NotNull
+	@Column(name = "scale", nullable = false)
+	private Double scale;
+
+	@ManyToOne
+	@NotNull
+	private Store store;
 
 	@JsonIgnore
 	@Transient
@@ -104,132 +138,131 @@ public class StoreMap implements Serializable {
 	@Transient
 	private Set<Shape> paths = new HashSet<Shape>();
 
+	public Long getId() {
+		return id;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public ZonedDateTime getValidityStart() {
+		return validityStart;
+	}
 
-    public ZonedDateTime getValidityStart() {
-        return validityStart;
-    }
+	public StoreMap validityStart(ZonedDateTime validityStart) {
+		this.validityStart = validityStart;
+		return this;
+	}
 
-    public StoreMap validityStart(ZonedDateTime validityStart) {
-        this.validityStart = validityStart;
-        return this;
-    }
+	public void setValidityStart(ZonedDateTime validityStart) {
+		this.validityStart = validityStart;
+	}
 
-    public void setValidityStart(ZonedDateTime validityStart) {
-        this.validityStart = validityStart;
-    }
+	public ZonedDateTime getValidityEnd() {
+		return validityEnd;
+	}
 
-    public ZonedDateTime getValidityEnd() {
-        return validityEnd;
-    }
+	public StoreMap validityEnd(ZonedDateTime validityEnd) {
+		this.validityEnd = validityEnd;
+		return this;
+	}
 
-    public StoreMap validityEnd(ZonedDateTime validityEnd) {
-        this.validityEnd = validityEnd;
-        return this;
-    }
+	public void setValidityEnd(ZonedDateTime validityEnd) {
+		this.validityEnd = validityEnd;
+	}
 
-    public void setValidityEnd(ZonedDateTime validityEnd) {
-        this.validityEnd = validityEnd;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public StoreMap url(String url) {
+		this.url = url;
+		return this;
+	}
 
-    public StoreMap url(String url) {
-        this.url = url;
-        return this;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public String getWallMap() {
+		return wallMap;
+	}
 
-    public String getWallMap() {
-        return wallMap;
-    }
-
-    public StoreMap wallMap(String wallMap) {
+	public StoreMap wallMap(String wallMap) {
 		this.walls.clear();
 		if (wallMap != null && scale != null) {
 			this.walls.addAll(resolveShapes(wallMap));
 
 		}
-        this.wallMap = wallMap;
-        return this;
-    }
+		this.wallMap = wallMap;
+		return this;
+	}
 
-    public void setWallMap(String wallMap) {
+	public void setWallMap(String wallMap) {
 		this.walls.clear();
 		if (wallMap != null && scale != null) {
 			this.walls.addAll(resolveShapes(wallMap));
 
 		}
-        this.wallMap = wallMap;
-    }
+		this.wallMap = wallMap;
+	}
 
-    public String getPathMap() {
-        return pathMap;
-    }
+	public String getPathMap() {
+		return pathMap;
+	}
 
-    public StoreMap pathMap(String pathMap) {
+	public StoreMap pathMap(String pathMap) {
 		this.paths.clear();
 		if (pathMap != null && scale != null) {
 			this.paths.addAll(resolveLines(pathMap));
 
 		}
-        this.pathMap = pathMap;
-        return this;
-    }
+		this.pathMap = pathMap;
+		return this;
+	}
 
-    public void setPathMap(String pathMap) {
+	public void setPathMap(String pathMap) {
 		this.paths.clear();
 		if (pathMap != null && scale != null) {
 			this.paths.addAll(resolveLines(pathMap));
 
 		}
-        this.pathMap = pathMap;
-    }
+		this.pathMap = pathMap;
+	}
 
-    public Double getDimensionX() {
-        return dimensionX;
-    }
+	public Double getDimensionX() {
+		return dimensionX;
+	}
 
-    public StoreMap dimensionX(Double dimensionX) {
-        this.dimensionX = dimensionX;
-        return this;
-    }
+	public StoreMap dimensionX(Double dimensionX) {
+		this.dimensionX = dimensionX;
+		return this;
+	}
 
-    public void setDimensionX(Double dimensionX) {
-        this.dimensionX = dimensionX;
-    }
+	public void setDimensionX(Double dimensionX) {
+		this.dimensionX = dimensionX;
+	}
 
-    public Double getDimensionY() {
-        return dimensionY;
-    }
+	public Double getDimensionY() {
+		return dimensionY;
+	}
 
-    public StoreMap dimensionY(Double dimensionY) {
-        this.dimensionY = dimensionY;
-        return this;
-    }
+	public StoreMap dimensionY(Double dimensionY) {
+		this.dimensionY = dimensionY;
+		return this;
+	}
 
-    public void setDimensionY(Double dimensionY) {
-        this.dimensionY = dimensionY;
-    }
+	public void setDimensionY(Double dimensionY) {
+		this.dimensionY = dimensionY;
+	}
 
-    public Double getScale() {
-        return scale;
-    }
+	public Double getScale() {
+		return scale;
+	}
 
-    public StoreMap scale(Double scale) {
-        this.scale = scale;
+	public StoreMap scale(Double scale) {
+		this.scale = scale;
 		if (wallMap != null && scale != null) {
 			this.walls.addAll(resolveShapes(wallMap));
 		}
@@ -237,11 +270,11 @@ public class StoreMap implements Serializable {
 			this.paths.addAll(resolveLines(pathMap));
 
 		}
-        return this;
-    }
+		return this;
+	}
 
-    public void setScale(Double scale) {
-        this.scale = scale;
+	public void setScale(Double scale) {
+		this.scale = scale;
 		if (wallMap != null && scale != null) {
 			this.walls.addAll(resolveShapes(wallMap));
 		}
@@ -249,55 +282,48 @@ public class StoreMap implements Serializable {
 			this.paths.addAll(resolveLines(pathMap));
 
 		}
-    }
+	}
 
-    public Store getStore() {
-        return store;
-    }
+	public Store getStore() {
+		return store;
+	}
 
-    public StoreMap store(Store store) {
-        this.store = store;
-        return this;
-    }
+	public StoreMap store(Store store) {
+		this.store = store;
+		return this;
+	}
 
-    public void setStore(Store store) {
-        this.store = store;
-    }
+	public void setStore(Store store) {
+		this.store = store;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        StoreMap storeMap = (StoreMap) o;
-        if (storeMap.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, storeMap.id);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		StoreMap storeMap = (StoreMap) o;
+		if (storeMap.id == null || id == null) {
+			return false;
+		}
+		return Objects.equals(id, storeMap.id);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
 
-    @Override
-    public String toString() {
-        return "StoreMap{" +
-            "id=" + id +
-            ", validityStart='" + validityStart + "'" +
-            ", validityEnd='" + validityEnd + "'" +
-            ", url='" + url + "'" +
-            ", wallMap='" + wallMap + "'" +
-            ", pathMap='" + pathMap + "'" +
-            ", dimensionX='" + dimensionX + "'" +
-            ", dimensionY='" + dimensionY + "'" +
-            ", scale='" + scale + "'" +
-            '}';
-    }
+	@Override
+	public String toString() {
+		return "StoreMap{" + "id=" + id + ", validityStart='" + validityStart + "'" + ", validityEnd='" + validityEnd
+				+ "'" + ", url='" + url + "'" + ", wallMap='" + wallMap + "'" + ", pathMap='" + pathMap + "'"
+				+ ", dimensionX='" + dimensionX + "'" + ", dimensionY='" + dimensionY + "'" + ", scale='" + scale + "'"
+				+ '}';
+	}
 
 	private Document getDocument(InputStream inputStream) throws IOException {
 		String parser = XMLResourceDescriptor.getXMLParserClassName();
@@ -352,14 +378,13 @@ public class StoreMap implements Serializable {
 					areaSegments.add(new Line2D.Double(currentElement[1], currentElement[2], start[1], start[2]));
 				}
 			}
-			
-			for(Line2D li : areaSegments){
+
+			for (Line2D li : areaSegments) {
 				if (li.intersectsLine(path)) {
 					// System.out.println("intersetction: ");
 					return false;
 				}
 			}
-
 
 		}
 		return true;
@@ -412,7 +437,6 @@ public class StoreMap implements Serializable {
 		return closestDist;
 
 	}
-
 
 	public static double angleBetween2Lines(Line2D line1, Line2D line2) {
 		double angle1 = Math.atan2(line1.getY1() - line1.getY2(), line1.getX1() - line1.getX2());
@@ -550,9 +574,8 @@ public class StoreMap implements Serializable {
 
 		// if (r < 255 || g < 255 || b < 255) {
 		if (a > 0) {
-				return false;
-			}
-
+			return false;
+		}
 
 		return true;
 
@@ -586,13 +609,11 @@ public class StoreMap implements Serializable {
 				return false;
 			}
 
-
 			// if (path.contains(x * scale, y * scale)) {
 			// return false;
 			// }
 		}
 		return true;
 	}
-
 
 }

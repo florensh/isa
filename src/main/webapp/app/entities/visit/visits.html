@@ -4,8 +4,55 @@
     <div class="row">
         <div class="col-md-3">
 
-            <p>Visits</p>
-            <!-- <form>
+
+
+            <p>Filter</p>
+            <div class="btn-group">
+                <label class="btn btn-default btn-sm" ng-model="radioModel" uib-btn-radio="'morning'">Morning</label>
+                <label class="btn btn-default btn-sm" ng-model="radioModel" uib-btn-radio="'afternoon'">Afternoon</label>
+                <label class="btn btn-default btn-sm" ng-model="radioModel" uib-btn-radio="'evening'">Evening</label>
+                <label class="btn btn-primary btn-sm" ng-model="radioModel" uib-btn-radio="'day'">Day</label>
+            </div>
+
+            <div style="margin-top: 12px">
+                <!-- <h4>Formatting codes playground</h4> -->
+                <!-- <p>Date Range</p> -->
+                <form class="form-inline">
+                    <label class="sr-only" for="mindu">StartDate</label>
+                    <input style="width: 102px" type="text" class="form-control input-sm mb-2 mr-sm-2 mb-sm-0" id="mindu" placeholder="Start Date">
+
+                    <label class="sr-only" for="maxdu">Username</label>
+                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+
+                        <input style="width: 101px" type="text" class="form-control input-sm" id="maxdu" placeholder="End Date">
+                    </div>
+                    <button type="submit" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-filter"></span></button>
+
+
+                </form>
+            </div>
+
+            <div style="margin-top: 12px">
+                <!-- <h4>Formatting codes playground</h4> -->
+                <!-- <p>Date Range</p> -->
+                <form class="form-inline">
+                    <label class="sr-only" for="inlineFormInput">StartDate</label>
+                    <input style="width: 101px" type="text" class="form-control input-sm mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Min duration">
+
+                    <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+
+                        <input style="width: 102px" type="text" class="form-control input-sm" id="inlineFormInputGroup" placeholder="Max duration">
+                    </div>
+                    <button type="submit" class="btn btn-default btn-sm"> <span class="glyphicon glyphicon-filter"></span></button>
+
+
+                </form>
+            </div>
+
+            <div style="margin-top:35px">
+                <p>Visits</p>
+                <!-- <form>
                 <div class="form-group">
                     <label for="formGroupExampleInput">Example label</label>
                     <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Example input">
@@ -19,15 +66,15 @@
 
 
 
-            <!-- <jhi-alert></jhi-alert> -->
-            <!-- <div class="container-fluid">
+                <!-- <jhi-alert></jhi-alert> -->
+                <!-- <div class="container-fluid">
 </div>
 <br/> -->
 
 
 
 
-<!-- <div class="row">
+                <!-- <div class="row">
   <div class="col-xs-4 no-padding-left">
     <button class="btn btn-primary" ui-sref="store-detail.visit.new" >
       <span class="glyphicon glyphicon-plus"></span>
@@ -40,24 +87,24 @@
 
 
 
-<div class="list-grp">
-  <div class="list-elem" ng-repeat="visit in vm.visits track by visit.id">
-    <div class="row">
-      <div class="col-md-1">
-        <input type="checkbox" ng-model="vm.activePaths.ids[visit.id]" ng-click="vm.refreshMap()">
-      </div>
-      <div class="col-md-10">
-        <strong>{{visit.dateOfVisit | date:'EEE'}}</strong>
-        <span>{{visit.dateOfVisit | date:'mediumDate'}}</span> <code>{{visit.dateOfVisit | date:'shortTime'}}</code><br>
-        <small>{{visit.duration}} min</small>
-      </div>
-    </div>
-  </div>
-  <!-- <pre ng-bind="vm.activePaths.ids | json"></pre> -->
-</div>
+                <div class="list-grp">
+                    <div class="list-elem" ng-repeat="visit in vm.visits track by visit.id">
+                        <div class="row">
+                            <div class="col-md-1">
+                                <input type="checkbox" ng-model="vm.activePaths.ids[visit.id]" ng-click="vm.refreshMap()">
+                            </div>
+                            <div class="col-md-10">
+                                <strong>{{visit.dateOfVisit | date:'EEE'}}</strong>
+                                <span>{{visit.dateOfVisit | date:'mediumDate'}}</span> <code>{{visit.dateOfVisit | date:'shortTime'}}</code><br>
+                                <small><span class="glyphicon glyphicon-hourglass"></span> {{visit.duration}}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <pre ng-bind="vm.activePaths.ids | json"></pre> -->
+                </div>
 
 
-
+            </div>
 
 
 
@@ -119,7 +166,7 @@
         </div>
         <div class="col-sm-9">
             <!-- <p>Path</p> -->
-            <leaflet lf-center="center" paths="paths" defaults="defaults" layers="layers"  markers="markers" maxBounds="maxBounds" height="480px" width="100%"></leaflet>
+            <leaflet lf-center="center" paths="paths" defaults="defaults" layers="layers" markers="markers" maxBounds="maxBounds" height="480px" width="100%"></leaflet>
             <!-- <leaflet lf-center="map.malmo" defaults="map.defaults" layers="map.layers" width="100%" height="400px"></leaflet> -->
             <!-- <leaflet lf-center="center" markers="unitsFiltered" defaults="defaults"></leaflet> -->
             <!-- <leaflet defaults="defaults" lf-center="center" width="100%" height="480px"></leaflet> -->
